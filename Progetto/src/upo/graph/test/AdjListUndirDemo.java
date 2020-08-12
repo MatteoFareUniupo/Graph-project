@@ -5,164 +5,271 @@ package upo.graph.test;
 import upo.graph.implementation.AdjListUndir;
 
 public class AdjListUndirDemo {
-
-	static AdjListUndir grafo = new AdjListUndir();
-
-	private static void StampaVertici() {
-		System.out.println();
-		System.out.print(" Vertici del Grafo: ");
-		for (int v : grafo.vertice) {
-			System.out.print("(" + grafo.vertice.get(v) + ") ");
+	
+	private static void addVertex(AdjListUndir graph) {
+		int v = graph.addVertex();
+		System.out.print("\n Vertice ("+v+") aggiungo al grafo. \n");
+	}
+	
+	private static void printVertices(AdjListUndir graph) {
+		System.out.print("\n Vertici del Grafo: ");
+		for (int v : graph.vertice) {
+			System.out.print("(" + graph.vertice.get(v) + ") ");
 		}
 	}
 	
-	private static void VerifyVertex(int vertex) {
-		System.out.println(); // next-line
-		System.out.println("  Il vertice "+vertex+" è presente ? ");
-		if (grafo.containsVertex(vertex)) {
-			System.out.println("  SI, "+vertex+" fa' parte del grafo.");
-		}
-		else System.out.println("  "+vertex+" NON esiste.");
-	}
-	
-	private static void VerifyEdge(int v1, int v2) {
-		
-		System.out.print("  Verifica la presenza dell'arco ["+v1+"-"+v2+"]: ");
-		if (grafo.containsEdge(v1, v2)) {
-			System.out.print("l'arco appartiene al grafo.\n");
-		}
-		else {
-			System.out.print("l'arco NON appartiene al grafo.\n");
-		}
-	}
-	
-	// Print Adjacency List 
-	private	static void printAdjList() {
-			for (int i = 0; i < grafo.size(); i++) {
-				System.out.print("  Adjacency list of vertex " + i + " -> ");
-					System.out.println(grafo.getAdjacent(i));	
-				}
-				System.out.println(); // next-line
-		}
-	
-	private static void detectCycle() {
-		System.out.print("  Il grafo presenta un ciclo ?"); 
-		if (grafo.isCyclic() == true) {
+	private static void verifyVertex(AdjListUndir graph, int vertex) {
+		System.out.print("\n Il vertice ("+vertex+") è presente nel grafo ? ");
+		if (graph.containsVertex(vertex)) {
 			System.out.print(" SI.");
 		}
+		else System.out.print(" NO.");
+	}
+	
+	private static void getSize(AdjListUndir graph) {
+		System.out.print("\n Numero di vertici: "+graph.size());
+	}
+	
+	private static void removeVertex(AdjListUndir graph, int index) {
+		System.out.print("\n Rimosso vertice ("+index+") dal grafo.");
+		graph.removeVertex(index);
+	}
+	
+	private static void addEdge(AdjListUndir graph, int source, int target) {
+		System.out.print("\n Aggiunto arco ["+source+"]-["+target+"] nel grafo.");
+		graph.addEdge(source, target);
+	}
+	
+	private static void verifyEdge(AdjListUndir graph, int source, int target) {
+		System.out.print("\n L'arco ["+source+"]-["+target+"] è presente nel grafo ? ");
+		Boolean verify = graph.containsEdge(source, target);
+		
+		if (verify) {
+			System.out.print("SI.");
+		}
 		else {
-			System.out.println("  NO.");
+			System.out.print("NO.");
 		}
 	}
 	
-	private static void isDAG() {
-		
-		if (grafo.isDAG() == true) {
-			System.out.println("\n  Il grafo è un DAG");
-		}
-		else {
-			System.out.println("\n  Il grafo NON è un DAG.");
+	private static void removeEdge(AdjListUndir graph, int source, int target) {
+		System.out.print("\n Rimosso arco ["+source+"]-["+target+"] dal grafo -> ");
+		graph.removeEdge(source, target);
+	}
+	
+	private static void showAdjList(AdjListUndir graph) {
+		for (int index = 0; index < graph.size(); index++) {
+			System.out.print("\n Adjacency list of vertex "+index+": "+graph.getAdjacent(index));
 		}
 	}
 	
-	private static void getSize() {
+	private static void isAdjacent(AdjListUndir graph, int target, int source) {
+		System.out.print("\n Il vertice ("+target+") è adiacente a ("+source+") ? ");
+		Boolean verifyAdjacency = graph.isAdjacent(target, source);
 		
-		System.out.print("\n  Numero di vettori: "+grafo.size()+"\n");
+		if (verifyAdjacency) {
+			System.out.print("SI.");
+		}
+		else {
+			System.out.print("NO.");
+		}
+	}
+	
+	private static void isDirect(AdjListUndir graph) {
+		System.out.print("\n Il grafo è diretto ? ");
+		Boolean verifyDirect = graph.isDirected();
+		if (verifyDirect) {
+			System.out.print("SI.");
+		}
+		else {
+			System.out.print("NO.");
+		}
+	}
+	
+	private static void isCyclic(AdjListUndir graph) {
+		System.out.print("\n Il grafo contiene un ciclo ? ");
+		Boolean verifyCycle = graph.isCyclic();
+		if (verifyCycle) {
+			System.out.print("SI.");
+		}
+		else {
+			System.out.print("NO.");
+		}
+	}
+	
+	private static void isDAG(AdjListUndir graph) {
+		System.out.print("\n Il grafo è un DAG ? ");
+		Boolean verifyDAG = graph.isDAG();
+		if (verifyDAG) {
+			System.out.print("SI.");
+		}
+		else {
+			System.out.print("NO.");
+		}
+	}
+	
+	private static void breathFirstSearch(AdjListUndir graph, int startingVertex) {
+		System.out.print("\n BFS starting from ("+startingVertex+"): ");
+		graph.getBFSTree(startingVertex);
+		System.out.print("end.");
+		
+	}
+	
+	private static void depthFirstSearch(AdjListUndir graph, int startingVertex) {
+		System.out.print("\n DFS starting from ("+startingVertex+"): ");
+		graph.getDFSTree(startingVertex);
+		System.out.print("end.");
+	}
+	
+	private static void totalDFS(AdjListUndir graph, int startingVertex) {
+		System.out.print("\n TOT-DFS starting from ("+startingVertex+"): ");
+		graph.getDFSTOTForest(startingVertex);
+		System.out.print("end.");
 	}
 	
 	public static void smallGraphDemo() {
 		
 		System.out.println(); // next-line
 		
-		System.out.println("*********************************");
-		System.out.println("*** START OF SMALL GRAPH DEMO ***");
-		System.out.println("*********************************");
+		System.out.println("**********************************************************************");
+		System.out.println("*** adjacency list - START OF SMALL GRAPH DEMO - algorithm project ***");
+		System.out.println("**********************************************************************");
 		
-		grafo.addVertex();
-		grafo.addVertex();
-		grafo.addVertex();
-		grafo.addVertex();
-		grafo.addVertex();
+		AdjListUndir graph = new AdjListUndir(5);
 		
-		StampaVertici();
-		System.out.println(); // next-line
+		printVertices(graph);
 		
-		VerifyVertex(0);
-		VerifyVertex(1);
-		VerifyVertex(2);
-		VerifyVertex(3);
-		VerifyVertex(4);
+		System.out.println(); /*** next-line ***/
 		
-		grafo.initAdjList();
+		getSize(graph);
 		
-		System.out.println(); // next-line
-		printAdjList();
+		System.out.println(); /*** next-line ***/
 		
-		grafo.addEdge(0, 1);
-		grafo.addEdge(0, 2);
-		grafo.addEdge(1, 2);
-		grafo.addEdge(2, 3);
+		verifyVertex(graph, 0);
+		verifyVertex(graph, 1);
+		verifyVertex(graph, 2);
+		verifyVertex(graph, 3);
+		verifyVertex(graph, 4);
+		verifyVertex(graph, 5);
 		
-		VerifyEdge(0, 1);
-		VerifyEdge(0, 2);
-		VerifyEdge(1, 2);
-		VerifyEdge(2, 3);
-		VerifyEdge(1, 4);
+		System.out.println(); /*** next-line ***/
 		
-		System.out.println(); // next-line
+		addVertex(graph);
+		verifyVertex(graph, 5);
 		
-		printAdjList();
+		System.out.println(); /*** next-line ***/
 		
-		detectCycle();
+		showAdjList(graph);
 		
-		isDAG();
+		System.out.println(); /*** next-line ***/
 		
-		System.out.print("\n* VISITA IN AMPIEZZA: ");
-		grafo.getBFSTree(0);
-		grafo.getBFSTree(1);
-		grafo.getBFSTree(2);
-		grafo.getBFSTree(3);
+		addEdge(graph, 0, 1);
+		addEdge(graph, 0, 2);
+		addEdge(graph, 0, 3);
+		addEdge(graph, 3, 4);
+		addEdge(graph, 3, 5);
 		
-		System.out.println(); // next-line
+		System.out.println(); /*** next-line ***/
 		
-		System.out.print("\n* VISITA IN PROFONDITA': ");
-		grafo.getDFSTree(0);
-		grafo.getDFSTree(1);
-		grafo.getDFSTree(2);
-		grafo.getDFSTree(3);
+		verifyEdge(graph, 0, 1);
+		verifyEdge(graph, 1, 0);
+		verifyEdge(graph, 0, 2);
+		verifyEdge(graph, 2, 0);
+		verifyEdge(graph, 0, 3);
+		verifyEdge(graph, 3, 0);
+		verifyEdge(graph, 3, 4);
+		verifyEdge(graph, 3, 5);
+		verifyEdge(graph, 3, 1);
 		
-		System.out.println(); // next-line
+		System.out.println(); /*** next-line ***/
 		
-		StampaVertici();
+		showAdjList(graph);
 		
-		System.out.println(); // next-line
+		System.out.println(); /*** next-line ***/
 		
-		getSize();
+		removeVertex(graph, 5);
+		verifyVertex(graph, 5);
+		/*** verifyEdge(graph, 3, 5); throws exception because vertex (5) is no more. ***/
+		/*** removeEdge(graph, 3, 5); throws exception because vertex (5) is no more. ***/
+		System.out.println(); /*** next-line ***/
 		
-		System.out.println(); // next-line
+		printVertices(graph);
 		
-		printAdjList();
+		removeEdge(graph, 3, 4);
 		
-		System.out.print("* VISITA IN PROFONDITA' TOTALE: ");
-		grafo.getDFSTOTForest(0);
-		grafo.getDFSTOTForest(1);
-		grafo.getDFSTOTForest(2);
-		grafo.getDFSTOTForest(3);
-		grafo.getDFSTOTForest(4);
+		showAdjList(graph);
 		
-		System.out.println(); // next-line
-		System.out.println(); // next-line
+		System.out.println(); /*** next-line ***/
+		
+		isAdjacent(graph, 1, 0);
+		isAdjacent(graph, 2, 0);
+		isAdjacent(graph, 3, 0);
+		isAdjacent(graph, 4, 3);
+		isAdjacent(graph, 0, 1);
+		
+		System.out.println(); /*** next-line ***/
+		
+		isCyclic(graph);
+		isDirect(graph);
+		isDAG(graph);
+		
+		System.out.println(); /*** next-line ***/
+		
+		breathFirstSearch(graph, 0);
+		breathFirstSearch(graph, 1);
+		breathFirstSearch(graph, 2);
+		breathFirstSearch(graph, 3);
+		breathFirstSearch(graph, 4);
+		
+		System.out.println(); /*** next-line ***/
+		
+		depthFirstSearch(graph, 0);
+		depthFirstSearch(graph, 1);
+		depthFirstSearch(graph, 2);
+		depthFirstSearch(graph, 3);
+		depthFirstSearch(graph, 4);
+		
+		System.out.println(); /*** next-line ***/
+		
+		totalDFS(graph, 0);
+		totalDFS(graph, 1);
+		totalDFS(graph, 2);
+		totalDFS(graph, 3);
+		totalDFS(graph, 4);
+		
+		System.out.println(); /*** next-line ***/
+		System.out.println(); /*** next-line ***/
 				
-		System.out.println("*******************************");
-		System.out.println("*** END OF SMALL GRAPH DEMO ***");
-		System.out.println("*******************************");
+		System.out.println("***********************************************************************");
+		System.out.println("**** adjacency list - END OF SMALL GRAPH DEMO - algorithm project  ****");
+		System.out.println("***********************************************************************");
+				
+	}
+	/*
+	public static void bigGraphDemo() {
 		
 		System.out.println(); // next-line
 		
+		System.out.println("**********************************************************************");
+		System.out.println("**** adjacency list - START OF BIG GRAPH DEMO - algorithm project ****");
+		System.out.println("**********************************************************************");
+		
+		AdjListUndir graph = new AdjListUndir(10);		
+		
+		System.out.println(); // next-line
+		System.out.println(); // next-line
+		
+		System.out.println("*********************************");
+		System.out.println("***** END OF BIG GRAPH DEMO *****");
+		System.out.println("*********************************");
 	}
-	
+	*/
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		smallGraphDemo();
+		System.out.print("\n|-----------NEW GRAPH-----------|\n");
+		//bigGraphDemo();
+		
+		return;
 	}
 }

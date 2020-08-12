@@ -11,7 +11,7 @@ import upo.graph.implementation.AdjListUndir;
 
 public class TestAdjListUndir {
 	
-	AdjListUndir graph = new AdjListUndir();
+	AdjListUndir graph = new AdjListUndir(5);
 	
 	NoSuchElementException thrown_0;
 	IllegalArgumentException thrown_1;
@@ -59,14 +59,7 @@ public class TestAdjListUndir {
 	
 	@Test
 	public void TestEdge()
-	{	
-		graph.addVertex();
-		graph.addVertex();
-		graph.addVertex();
-		graph.addVertex();
-		
-		graph.initAdjList();
-		
+	{			
 		graph.addEdge(0, 1);
 		graph.addEdge(0, 3);
 		graph.addEdge(2, 3);

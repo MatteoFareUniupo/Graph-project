@@ -77,7 +77,7 @@ public class VisitForest {
 		vertexColor[vertex] = color;
 	}
 	
-	public int getPartent(int vertex) throws NoSuchElementException {
+	public int getParent(int vertex) throws NoSuchElementException {
 		if(vertex >= graph.size()) throw new NoSuchElementException("Il vertice di indice "+vertex+" non appartiene al grafo");
 		return parent[vertex];
 	}

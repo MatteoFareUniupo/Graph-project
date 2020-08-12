@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import upo.graph.base.*;
@@ -24,19 +25,25 @@ public class AdjListUndir implements Graph{
 	public ArrayList<Integer> vertice = new ArrayList<Integer>();
 	public ArrayList<ArrayList<Integer>> adjList;
 	
-	/**
-	 * Initialize adjacency list.
-	 */
-	public void initAdjList() {
+	private int numOfVertices = size();
+	private Queue<Integer> queue; /* queue used by BFS algorithm. */
+	
+	public AdjListUndir(int num) {
+		
 		adjList = new ArrayList<ArrayList<Integer>>();
-		for (int i = 0; i < vertice.size(); i++) {
-				adjList.add(new ArrayList<Integer>());
-		}
+		vertice = new ArrayList<Integer>();
+		this.numOfVertices = num;
+		for (int i = 0; i < numOfVertices; i++) {
+			adjList.add(new ArrayList<Integer>());
+			vertice.add(i);
+		}		
 	}
 	
 	public int addVertex() {
 		// TODO Auto-generated method stub
 		int i = size();
+		ArrayList<Integer> adjacentVertices = new ArrayList<Integer>();
+		adjList.add(adjacentVertices);
 		vertice.add(i);
 		
 		return vertice.get(i);
@@ -57,30 +64,41 @@ public class AdjListUndir implements Graph{
 	public void removeVertex(int index) throws NoSuchElementException {
 		// TODO Auto-generated method stub
 		if (!containsVertex(index)) {
-			throw new NoSuchElementException("Error: the vertex (" + index + ") does not exist!");
+			throw new NoSuchElementException("Errore: il vertice ("+index+") non esiste!");
 		}
 		for (int i = 0; i < size(); i++) {
 			if (i == index) {
 				vertice.remove(i); // remove the chosen vertex.
+				adjList.remove(i);
 				
 				for (int j = index; j < size(); j++) { // restore the index number progression.
 					vertice.set(j, j);
 				}
 			}
 		}	
+		for (int i = 0; i < size(); i++) {
+			int posVertex = adjList.get(i).indexOf(index);
+			if (posVertex > -1) {
+				adjList.get(i).remove(posVertex);
+			}
+		}
 	}
 
 	@Override
 	public void addEdge(int sourceVertexIndex, int targetVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		int source = vertice.indexOf(sourceVertexIndex);
-		int target = vertice.indexOf(targetVertexIndex);
-		
 		// check if vertices exist
-		if (!containsVertex(source) || !containsVertex(target)) {
-			throw new IllegalArgumentException("Errore: uno dei vertici inseriti, o entrambi, non sono presenti nel grafo");
+		if (!containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+sourceVertexIndex+") non è presente nel grafo. \n");
+		}
+		if (!containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+targetVertexIndex+") non è presente nel grafo. \n");
 		}
 		else { // if the Edge does not exist add it
+			
+			int source = vertice.indexOf(sourceVertexIndex);
+			int target = vertice.indexOf(targetVertexIndex);
+			
 			if (!adjList.get(source).contains(target)) {
 				adjList.get(source).add(target);
 				adjList.get(target).add(source);
@@ -94,12 +112,14 @@ public class AdjListUndir implements Graph{
 	@Override
 	public boolean containsEdge(int sourceVertexIndex, int targetVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		if (!containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+sourceVertexIndex+") non è presente nel grafo. \n");
+		}
+		if (!containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+targetVertexIndex+") non è presente nel grafo. \n");
+		}
 		int source = vertice.indexOf(sourceVertexIndex);
 		int target = vertice.indexOf(targetVertexIndex);
-		
-		if (!containsVertex(source) || !containsVertex(target)) {
-			throw new IllegalArgumentException("Errore: uno dei vertici inseriti, o entrambi, non sono presenti nel grafo");
-		}
 		
 		if (containsVertex(source)) {
 			if (adjList.get(source).contains(target)) { // contains(targetVertexIndex)
@@ -113,23 +133,26 @@ public class AdjListUndir implements Graph{
 	public void removeEdge(int sourceVertexIndex, int targetVertexIndex)
 			throws IllegalArgumentException, NoSuchElementException {
 		// TODO Auto-generated method stub
-
-		int source = vertice.indexOf(sourceVertexIndex);
-		int target = vertice.indexOf(targetVertexIndex);
-		
-		if (!containsVertex(sourceVertexIndex) || !containsVertex(targetVertexIndex)) {
-			throw new IllegalArgumentException("Errore: uno dei vertici inseriti, o entrambi, non sono presenti nel grafo");
+		if (!containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+sourceVertexIndex+") non è presente nel grafo. \n");
+		}
+		if (!containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+targetVertexIndex+") non è presente nel grafo. \n");
+		}
+		if (!containsEdge(sourceVertexIndex, targetVertexIndex)) {
+			throw new NoSuchElementException("Errore: l'arco ["+sourceVertexIndex+"]-["+targetVertexIndex+"] non esiste. \n");
 		}
 
 		if (adjList.get(sourceVertexIndex).contains(targetVertexIndex)) {
-			for (int i = 0; i < adjList.get(source).size(); i++) {
-				if (targetVertexIndex == adjList.get(source).get(i)) {
-					adjList.get(source).remove(i);
+			for (int i = 0; i < adjList.get(sourceVertexIndex).size(); i++) {
+				if (targetVertexIndex == adjList.get(sourceVertexIndex).get(i)) {
+					adjList.get(sourceVertexIndex).remove(i);
+					System.out.print(" The edge ["+sourceVertexIndex+"-"+targetVertexIndex+"] / ["+targetVertexIndex+"-"+sourceVertexIndex+"] is removed. \n");
 				}
 			}
-			for (int j = 0; j < adjList.get(target).size(); j++) {
-				if (sourceVertexIndex == adjList.get(target).get(j)) {
-					adjList.get(target).remove(j);
+			for (int j = 0; j < adjList.get(targetVertexIndex).size(); j++) {
+				if (sourceVertexIndex == adjList.get(targetVertexIndex).get(j)) {
+					adjList.get(targetVertexIndex).remove(j);
 				}
 			}
 		}
@@ -140,13 +163,11 @@ public class AdjListUndir implements Graph{
 
 	@Override
 	public Set<Integer> getAdjacent(int vertexIndex) throws NoSuchElementException {
-
+		// TODO Auto-generated method stub
 		Set<Integer> adjOfVertex = new HashSet<Integer>();
 		
-		int index = vertice.indexOf(vertexIndex);
-		
-		if (!containsVertex(index)) {
-			throw new NoSuchElementException("Errore: vertice non presente nel grafo");
+		if (!containsVertex(vertexIndex)) {
+			throw new NoSuchElementException("Errore: il vertice ("+vertexIndex+") non esiste. \n");
 		}
 		else {
 			for (int v = 0; v < vertice.size(); v++) {
@@ -161,8 +182,11 @@ public class AdjListUndir implements Graph{
 	@Override
 	public boolean isAdjacent(int targetVertexIndex, int sourceVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		if (!containsVertex(sourceVertexIndex) || !containsVertex(targetVertexIndex)) {
-			throw new IllegalArgumentException("Errore: uno dei vertici inseriti, o entrambi, non sono presenti nel grafo");
+		if (!containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+sourceVertexIndex+") non è presente nel grafo. \n");
+		}
+		if (!containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Errore: il vertice ("+targetVertexIndex+") non è presente nel grafo. \n");
 		}
 		if (containsEdge(sourceVertexIndex, targetVertexIndex)) {
 			return true;
@@ -183,8 +207,7 @@ public class AdjListUndir implements Graph{
 	public boolean isDirected() {
 		// TODO Auto-generated method stub
 		for (int v : vertice) {
-			//adjList.get(v);
-			getAdjacent(v);
+			getAdjacent(v); //adjList.get(v);
 		}
 		return false;
 	}
@@ -193,7 +216,6 @@ public class AdjListUndir implements Graph{
 	public boolean isCyclic() {
 		// TODO Auto-generated method stub
 		boolean result = false;
-		
 		boolean [] visited = new boolean[size()];
 		
 		for (int i = 0; i < size(); i++) {
@@ -207,11 +229,10 @@ public class AdjListUndir implements Graph{
 	}
 	
 	private boolean isCycle(int currentVertex, boolean [] visited, int parent) {
-		
+		// TODO Auto-generated method stub
 		visited[currentVertex] = true;
 		
 		for (int i = 0; i < adjList.get(currentVertex).size(); i++) {
-			
 			int vertex = adjList.get(currentVertex).get(i);
 			
 			if (vertex != parent) {
@@ -231,7 +252,7 @@ public class AdjListUndir implements Graph{
 	@Override
 	public boolean isDAG() {
 		// TODO Auto-generated method stub
-		if (!isCyclic())
+		if (!isCyclic() && isDirected())
 			return true;
 		else
 			return false;
@@ -243,49 +264,30 @@ public class AdjListUndir implements Graph{
 		VisitForest visita = new VisitForest(this, VisitType.BFS);
 		
 		if (visita.visitType != VisitType.BFS) {
-			throw new UnsupportedOperationException("\nErrore: operazione non supportata");
+			throw new UnsupportedOperationException("Errore: operazione non supportata. \n");
 		}
 		if (!this.containsVertex(startingVertex)) {
-			throw new IllegalArgumentException("\nErrore: il vertice "+startingVertex+" non è presente nel grafo");
+			throw new IllegalArgumentException("Errore: il vertice ("+startingVertex+") non esiste. \n");
 		}
-		
-		Queue<Integer> queue = new LinkedList<Integer>();
-//		boolean [] visited = new boolean[size()];
-		
-		for (int i = 0; i < size(); i++) {
-			visita.setColor(i, Color.WHITE);
-			//visita.setParent(i, i);
-			visita.setDistance(i, Double.POSITIVE_INFINITY);
-		}
+		queue = new LinkedList<Integer>();
 		
 		visita.setColor(startingVertex, Color.GRAY);
-//		visited[startingVertex] = true;
-		
-		visita.setDistance(startingVertex, 0);
-		System.out.print("\n  Visita BFS partendo da ("+startingVertex+"): ");
-		
 		queue.add(startingVertex);
-
-		while (queue.size() != 0)
-		{	
+		
+		while (!queue.isEmpty()) {
 			startingVertex = queue.poll();
-			System.out.print(startingVertex+" -> ");
+			System.out.print(startingVertex+" ⟶ ");
 			
-			for (int i = 0; i < adjList.get(startingVertex).size(); i++) {
-				
-				int vertex = adjList.get(startingVertex).get(i);
-				
-				if (visita.getColor(vertex) == Color.WHITE) { // !visited[vertex]
-					visita.setColor(vertex, Color.GRAY);
-					visita.setParent(vertex, startingVertex);
-//					visited[vertex] = true;
-					visita.setDistance(vertex, startingVertex + 1);
-					queue.add(vertex);
+			Iterator<Integer> iterator = getAdjacent(startingVertex).iterator();
+			while (iterator.hasNext()) {
+				int n = iterator.next();
+				if (visita.getColor(n) == Color.WHITE) {
+					visita.setColor(n, Color.GRAY);
+					queue.add(n);
 				}
 			}
 			visita.setColor(startingVertex, Color.BLACK);
 		}
-		System.out.print("Fine.");
 		return visita;
 	}
 
@@ -301,54 +303,65 @@ public class AdjListUndir implements Graph{
 			throw new IllegalArgumentException("\nErrore: il vertice "+startingVertex+" non è presente nel grafo");
 		}
 		
-		Stack<Integer> stack = new Stack<>();
-		stack.add(startingVertex);
-
-		System.out.print("\n  Visita DFS partendo da ("+startingVertex+"): ");
+		Stack<Integer> stack = new Stack<Integer>();
+		stack.push(startingVertex);
+		
 		while (!stack.isEmpty()) {
 			
-			int vertex = stack.pop();
+			startingVertex = stack.peek();
+			stack.pop();
 			
-			if (visita.getColor(vertex) == Color.WHITE) {
-				System.out.print(vertex + " -> ");
-				visita.setColor(vertex, Color.GRAY);
+			if (visita.getColor(startingVertex) == Color.WHITE) {
+				System.out.print(startingVertex + " ⟶ ");
+				visita.setColor(startingVertex, Color.GRAY);
 			}
 			
-			for (int i = 0; i < adjList.get(vertex).size(); i++) {
-				
-				int u = adjList.get(vertex).get(i);
-				
-				if ((isAdjacent(u, vertex)) && (visita.getColor(u) == Color.WHITE)) {
-					stack.add(u);
+			Iterator<Integer> itr = adjList.get(startingVertex).iterator();
+			
+			while (itr.hasNext()) {
+				int v = itr.next();
+				if (visita.getColor(v) == Color.WHITE) {
+					stack.push(v);
 				}
-			}	
+			}
 		}
 		visita.setColor(startingVertex, Color.BLACK);
-		System.out.print("Fine.");
-		
 		return visita;
+	}
+
+	/**
+	 * Utility function for TOT-DFS algorithm.
+	 * @param sourceVertex
+	 * @param visit
+	 */
+	private void DFSUtil(int sourceVertex, VisitForest visit) {
+		// TODO Auto-generated method stub
+		visit.setColor(sourceVertex, Color.GRAY);
+		System.out.print(sourceVertex+" ⟶ ");
+		
+		for (int i = 0; i < size(); i++) {
+			if (visit.getColor(i) == Color.WHITE) {
+				DFSUtil(i, visit);
+			}
+		}	
 	}
 
 	@Override
 	public VisitForest getDFSTOTForest(int startingVertex)
 			throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		VisitForest visita = new VisitForest(this, VisitType.DFS_TOT);
-		
-		if (visita.visitType != VisitType.DFS_TOT || isDirected()) {
-			throw new UnsupportedOperationException("\nErrore: operazione non supportata");
+		if (!containsVertex(startingVertex)) {
+			throw new IllegalArgumentException("\n The vertex ("+startingVertex+") it is not a valid argument. \n");
 		}
-		if (!this.containsVertex(startingVertex)) {
-			throw new IllegalArgumentException("\nErrore: il vertice "+startingVertex+" non è presente nel grafo");
-		}
+		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
-		for (int i = 0; i < size(); i++) {
-			if (visita.getColor(i) == Color.WHITE) {
-				getDFSTree(startingVertex);
-				return visita;
+		for (int i = startingVertex; i < size(); i++) {
+			
+			if (visit.getColor(i) == Color.WHITE) {
+				DFSUtil(i, visit);
 			}
 		}
-		return visita;
+		return visit;
 	}
 
 	@Override
@@ -373,6 +386,7 @@ public class AdjListUndir implements Graph{
 	@Override
 	public Set<Set<Integer>> connectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
+		//Set<Set<Integer>> set = new HashSet<>();
 		return null;
 	}
 }
