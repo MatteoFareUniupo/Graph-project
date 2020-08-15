@@ -57,7 +57,7 @@ public class AdjMatrixDirWeightDemo {
 		graph.removeEdge(source, target);
 	}
 	
-	private static void showAdjList(AdjMatrixDirWeight graph) {
+	private static void showAsAdjList(AdjMatrixDirWeight graph) {
 		for (int index = 0; index < graph.size(); index++) {
 			System.out.print("\n Lista di adiacenza del vertice "+index+": "+graph.getAdjacent(index));
 		}
@@ -156,7 +156,45 @@ public class AdjMatrixDirWeightDemo {
 		System.out.print("nuovo valore = "+weight);
 	}
 	
-	
+	private static String showAsMatrix(AdjMatrixDirWeight graph) {
+		System.out.print("\n Adjacency Matrix Rapresentation: \n");
+		
+		String str = " ------";
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		str += " | X |";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "  " + graph.vertices[i] + " ";
+		}
+		str += " ";
+		str += "|\n";
+		str += " ------";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		
+		for (int i = 0; i < graph.adjMatrix.length; i++) {
+			str += " | " + graph.vertices[i] + " | ";
+			for (int j = 0; j < graph.adjMatrix[i].length; j++) {
+				str += graph.adjMatrix[i][j] + " ";
+			}
+			str += "|\n";
+		}
+		str += " ------";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		
+		System.out.print(str);
+		return str;
+	}
 
 	public static void smallGraphDemo() {
 		
@@ -213,7 +251,7 @@ public class AdjMatrixDirWeightDemo {
 		
 		System.out.println(); // next-line
 		
-		showAdjList(graph);
+		showAsAdjList(graph);
 		
 		System.out.println(); // next-line
 		
@@ -236,7 +274,7 @@ public class AdjMatrixDirWeightDemo {
 		
 		System.out.println(); // next-line
 		
-		showAdjList(graph);
+		showAsAdjList(graph);
 		
 		System.out.println(); // next-line
 		
@@ -291,7 +329,7 @@ public class AdjMatrixDirWeightDemo {
 		
 		System.out.println(); // next-line
 		
-		showAdjList(graph);
+		showAsAdjList(graph);
 		
 		System.out.println(); // next-line
 		
@@ -310,6 +348,9 @@ public class AdjMatrixDirWeightDemo {
 		getEdgeWeight(graph, 1, 0);
 		
 		System.out.println(); // next-line
+		
+		showAsMatrix(graph);
+		
 		System.out.println(); // next-line
 		
 		System.out.println("****************************************************************************************");
