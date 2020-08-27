@@ -143,7 +143,7 @@ public interface Graph {
 	public VisitForest getDFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException;
 	
 	/**
-	 * Esegue una visita in profondit� (DFS-TOT) di tutti i vertici del grafo, e restituisce un oggetto di tipo 
+	 * Esegue una visita in profondità (DFS-TOT) di tutti i vertici del grafo, e restituisce un oggetto di tipo 
 	 * <code>VisitForest</code> che rappresenta la foresta di visita.
 	 * @param startingVertex il source vertex.
 	 * @return la foresta di visita.
@@ -154,7 +154,7 @@ public interface Graph {
 	public VisitForest getDFSTOTForest(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException;
 	
 	/**
-	 * Esegue una visita in profondit� (DFS-TOT) di tutti i vertici del grafo, visitando i vertici nell'ordine
+	 * Esegue una visita in profondità (DFS-TOT) di tutti i vertici del grafo, visitando i vertici nell'ordine
 	 * indicato da <code>vertexOrdering</code>, e restituisce un oggetto di tipo <code>VisitForest</code> 
 	 * che rappresenta la foresta di visita.
 	 * @param startingVertex il source vertex.

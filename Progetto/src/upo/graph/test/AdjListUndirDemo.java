@@ -58,8 +58,8 @@ public class AdjListUndirDemo {
 	}
 	
 	private static void showAdjList(AdjListUndir graph) {
-		for (int index = 0; index < graph.size(); index++) {
-			System.out.print("\n Adjacency list of vertex "+index+": "+graph.getAdjacent(index));
+		for (int i = 0; i < graph.size(); i++) {
+			System.out.print("\n Adjacency list of vertex "+i+": "+graph.getAdjacent(i));
 		}
 	}
 	
@@ -126,6 +126,23 @@ public class AdjListUndirDemo {
 		graph.getDFSTOTForest(startingVertex);
 		System.out.print("end.");
 	}
+	
+//	private static void topologicalSort(AdjListUndir graph) {
+//		System.out.print("\n Ordinamento topologico: ");
+//		int[] ord = graph.topologicalSort();
+//		for (int i = 0; i < graph.size()-1; i++) {
+//			System.out.print("("+ord[i]+")-");
+//		}
+//		System.out.print("("+ord[graph.size()-1]+")");
+//	}
+	
+	private static void printConnectedComponents(AdjListUndir graph) {
+		System.out.print("\n Graph's Connected Componets: "+graph.connectedComponents());
+	}
+	
+//	private static void stronglyCC(AdjListUndir graph) {
+//		System.out.print("\n Graph's Strongly Connected Components: "+graph.stronglyConnectedComponents());
+//	}
 	
 	public static void smallGraphDemo() {
 		
@@ -237,15 +254,23 @@ public class AdjListUndirDemo {
 		totalDFS(graph, 3);
 		totalDFS(graph, 4);
 		
+		//topologicalSort(graph);
+		System.out.println(); /*** next-line ***/
+		
+		showAdjList(graph);
+		
+		System.out.println(); /*** next-line ***/
+		
+		printConnectedComponents(graph);
+		
 		System.out.println(); /*** next-line ***/
 		System.out.println(); /*** next-line ***/
 				
-		System.out.println("***********************************************************************");
-		System.out.println("**** adjacency list - END OF SMALL GRAPH DEMO - algorithm project  ****");
-		System.out.println("***********************************************************************");
-				
+		System.out.println("**********************************************************************");
+		System.out.println("**** adjacency list - END OF SMALL GRAPH DEMO - algorithm project ****");
+		System.out.println("**********************************************************************");			
 	}
-	/*
+	
 	public static void bigGraphDemo() {
 		
 		System.out.println(); // next-line
@@ -254,21 +279,36 @@ public class AdjListUndirDemo {
 		System.out.println("**** adjacency list - START OF BIG GRAPH DEMO - algorithm project ****");
 		System.out.println("**********************************************************************");
 		
-		AdjListUndir graph = new AdjListUndir(10);		
+		AdjListUndir graph = new AdjListUndir(10);
+		
+		printVertices(graph);
+		
+		System.out.println(); // next-line
+
+		addEdge(graph, 0, 1);
+		addEdge(graph, 0, 4);
+		addEdge(graph, 0, 5);
+		addEdge(graph, 2, 3);
+		addEdge(graph, 2, 6);
+		addEdge(graph, 8, 9);
+		
+		System.out.println(); // next-line
+		
+		printConnectedComponents(graph);
 		
 		System.out.println(); // next-line
 		System.out.println(); // next-line
 		
-		System.out.println("*********************************");
-		System.out.println("***** END OF BIG GRAPH DEMO *****");
-		System.out.println("*********************************");
+		System.out.println("**********************************************************************");
+		System.out.println("***** adjacency list - END OF BIG GRAPH DEMO - algorithm project *****");
+		System.out.println("**********************************************************************");
 	}
-	*/
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		smallGraphDemo();
-		System.out.print("\n|-----------NEW GRAPH-----------|\n");
-		//bigGraphDemo();
+		System.out.print("\n|------------------------------NEW GRAPH------------------------------|\n");
+		bigGraphDemo();
 		
 		return;
 	}

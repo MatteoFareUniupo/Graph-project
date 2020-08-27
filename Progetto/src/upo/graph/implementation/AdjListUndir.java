@@ -216,11 +216,11 @@ public class AdjListUndir implements Graph{
 	public boolean isCyclic() {
 		// TODO Auto-generated method stub
 		boolean result = false;
-		boolean [] visited = new boolean[size()];
+		VisitForest visit = new VisitForest(this, VisitType.DFS); // boolean [] visited = new boolean[size()];
 		
 		for (int i = 0; i < size(); i++) {
-			if (visited[i] == false) {
-				if (isCycle(i, visited, -1)) {
+			if (visit.getColor(i) == Color.WHITE) { // if (visited[i] == false)
+				if (isCycle(i, visit, -1)) { // if (isCycle(i, visited, -1))
 					result = true;
 				}
 			}
@@ -228,19 +228,19 @@ public class AdjListUndir implements Graph{
 		return result;
 	}
 	
-	private boolean isCycle(int currentVertex, boolean [] visited, int parent) {
+	private boolean isCycle(int currentVertex, VisitForest visit, int parent) { // private boolean isCycle(int currentVertex, boolean [] visited, int parent)
 		// TODO Auto-generated method stub
-		visited[currentVertex] = true;
+		visit.setColor(currentVertex, Color.GRAY);; // visited[currentVertex] = true;
 		
 		for (int i = 0; i < adjList.get(currentVertex).size(); i++) {
 			int vertex = adjList.get(currentVertex).get(i);
 			
 			if (vertex != parent) {
-				if (visited[vertex]) {
+				if (visit.getColor(vertex) == Color.GRAY) { // if (visited[vertex])
 					return true;
 				}
 				else {
-					if (isCycle(vertex, visited, currentVertex)) {
+					if (isCycle(vertex, visit, currentVertex)) { // if (isCycle(vertex, visited, currentVertex))
 						return true;
 					}
 				}
@@ -371,22 +371,200 @@ public class AdjListUndir implements Graph{
 		return null;
 	}
 
+	private void topologicalSortUtil(int v, VisitForest visit, Stack<Integer> stack) { // topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack)
+		// TODO Auto-generated method stub
+		visit.setColor(v, Color.GRAY); // visited[v] = true;
+ 		int i;
+		
+		Iterator<Integer> it = getAdjacent(v).iterator();
+		while(it.hasNext()) {
+			i = it.next();
+			if (visit.getColor(i) == Color.WHITE) { // !visited[i]
+				topologicalSortUtil(i, visit, stack);
+			}
+		}
+		stack.push(v);	
+	}
+
 	@Override
 	public int[] topologicalSort() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		return null;
+		if (isDAG()) {
+			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
+			Stack<Integer> stack = new Stack<>();
+			
+			int[] ord = new int[size()];
+ 			// boolean[] visited = new boolean[size()];
+ 			
+ 			int pos = 0;
+ 			int j;
+ 			
+ 			for (int i = 0; i < size(); i++) {
+				visit.setColor(i, Color.WHITE); // visited[i] = false;
+			}
+ 			
+ 			for (int i = 0; i < size(); i++) {
+				if (visit.getColor(i) == Color.WHITE) { // visited[i] == false
+					topologicalSortUtil(i, visit, stack);
+				}
+			}
+ 			
+ 			while (!stack.isEmpty()) {
+ 				j = stack.pop();
+ 				ord[pos++] = j;
+ 			}
+			return ord;
+		}
+		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. "); 
 	}
 
 	@Override
 	public Set<Set<Integer>> stronglyConnectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		return null;
+		if (isDirected()) {
+			
+			Set<Set<Integer>> setOfSCC = new HashSet<>();
+			
+			Stack<Integer> stack = new Stack<>();
+			
+			VisitForest visitForest = new VisitForest(this, VisitType.DFS_TOT);
+			
+			for (int i = 0; i < size(); i++) {
+				visitForest.setColor(i, Color.WHITE);
+			}
+			
+			for (int i = 0; i < size(); i++) {
+				if (visitForest.getColor(i) == Color.WHITE) {
+					fillOrder(i, visitForest, stack);
+				}
+			}
+			
+			AdjListUndir trGraph = getTranspose();
+			VisitForest trForest = new VisitForest(trGraph, VisitType.DFS_TOT);
+			
+			for (int i = 0; i < trGraph.size(); i++) {
+				trForest.setColor(i, Color.WHITE);
+			}
+			
+			while (!stack.isEmpty()) {
+				
+				int v = stack.pop();
+				Set<Integer> set = new HashSet<>();
+				
+				if (trForest.getColor(v) == Color.WHITE) {
+					trGraph.dfsSCC(v, trForest, set);
+					setOfSCC.add(set);
+				}
+			}
+			return setOfSCC;
+		}
+		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. The graph must be Direct! ");
 	}
-
+	
+	/**
+	 * Method that visits the graph and saves the
+	 * order of visit of the vertices in a stack.
+	 * @param v - vertex of the graph.
+	 * @param forest - visit forest.
+	 * @param stack - stack used to save the visiting order.
+	 */
+	private void fillOrder(int v, VisitForest forest, Stack<Integer> stack) {
+		// TODO Auto-generated method stub
+		forest.setColor(v, Color.GRAY);
+		
+		Iterator<Integer> iterator = getAdjacent(v).iterator();
+		
+		while (iterator.hasNext()) {
+			int n = iterator.next();
+			
+			if (forest.getColor(n) == Color.WHITE) {
+				fillOrder(n, forest, stack);
+			}
+		}
+		stack.push(v);
+	}
+	
+	/**
+	 * Method that given a graph, creates the transposed graph.
+	 * @return graph - the graph.
+	 */
+	AdjListUndir getTranspose() {
+		// TODO Auto-generated method stub
+		AdjListUndir graph = new AdjListUndir(size());
+		
+		for (int i = 0; i < size(); i++) {
+			
+			Iterator<Integer> iterator = getAdjacent(i).iterator();
+			
+			while (iterator.hasNext()) {
+				graph.addEdge(iterator.next(), i);
+			}
+		}
+		return graph;
+	}
+	
+	/**
+	 * Method that performs a DFS-TOT visit on the transposed graph.
+	 * It inserts the visited vertices into an Integer Set.
+	 * @param v - vertex of the graph.
+	 * @param forest - visit forest.
+	 * @param set - set of Integer.
+	 */
+	private void dfsSCC(int v, VisitForest forest, Set<Integer> set) {
+		// TODO Auto-generated method stub
+		forest.setColor(v, Color.GRAY);
+		set.add(v);
+		
+		int n;
+		
+		Iterator<Integer> iterator = getAdjacent(v).iterator();
+		
+		while (iterator.hasNext()) {
+			n = iterator.next();
+			if (forest.getColor(n) == Color.WHITE) {
+				dfsSCC(n, forest, set);
+			}
+		}	
+	}
+	
 	@Override
 	public Set<Set<Integer>> connectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		//Set<Set<Integer>> set = new HashSet<>();
-		return null;
+		if (!isDirected()) {
+			
+			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
+			
+			Set<Set<Integer>> setOfCC = new HashSet<>();
+			Set<Integer> visitedSet = new HashSet<>();
+			
+			for (int i : vertice) {
+				if (!visitedSet.contains(i)) {
+					
+					Set<Integer> resultedSet = new HashSet<>();
+
+					Stack<Integer> stack = new Stack<>();
+					
+					stack.push(i);
+					
+					while(!stack.isEmpty()) {
+						
+						int vertex = stack.pop();
+						visit.setColor(vertex, Color.GRAY);
+						
+						visitedSet.add(vertex);
+						resultedSet.add(vertex);
+						
+						for (int v : getAdjacent(vertex)) {
+							if (!visitedSet.contains(v)) {
+								stack.push(v);
+							}
+						}
+					}
+					setOfCC.add(resultedSet);
+				}
+			}
+			return setOfCC;
+		}
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph. ");
 	}
 }

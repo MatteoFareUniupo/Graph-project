@@ -338,44 +338,69 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		}
 
 		visit.setColor(startingVertex, Color.GRAY);	
-		visit.setDistance(startingVertex, 0);
+		visit.setDistance(startingVertex, 0.0);
 		
 		queue.add(startingVertex);
 		
 		while (queue.size() != 0)
 		{	
-			startingVertex = queue.poll();
-			System.out.print(startingVertex+" ⟶ ");
+			int head = queue.peek(); /* Equal to: "int head = queue.poll();" -> with this method "queue.remove()" must be removed. */
+			System.out.print(head+" ⟶ "); // DA TOGLIERE 
 			
-			for (int i : getAdjacent(startingVertex)) {  //  (int i = 0; i < size(); i++) così esplora tutti i vertici
+			for (int i : getAdjacent(head)) {  //  (int i = 0; i < size(); i++) così esplora tutti i vertici
 				if (visit.getColor(i) == Color.WHITE) { 
 					visit.setColor(i, Color.GRAY);
-					visit.setParent(i, startingVertex);
-					visit.setDistance(i, startingVertex + 1);
+					visit.setParent(i, head);
+					visit.setDistance(i, visit.getDistance(head) + 1.0);
 					queue.add(i);
 				}
 			}
-			visit.setColor(startingVertex, Color.BLACK);
+			visit.setColor(head, Color.BLACK);
+			queue.remove();
 		}
-		System.out.print("end.");
+		System.out.print("end."); // DA TOGLIERE
 		return visit;
+	}
+	
+	/**
+	 * Utility function for DFS algorithm.
+	 * @param sourceVertex
+	 * @param visit
+	 */
+	private void DFSUtil(int sourceVertex, VisitForest visit) {
+		// TODO Auto-generated method stub
+		visit.setColor(sourceVertex, Color.GRAY);
+		System.out.print(sourceVertex+" ⟶ ");// DA TOGLIERE
+		
+		for (int i : getAdjacent(sourceVertex)) {
+			if (visit.getColor(i) == Color.WHITE) {
+				DFSUtil(i, visit);
+			}
+		}	
 	}
 
 	@Override
 	public VisitForest getDFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
 		VisitForest visit = new VisitForest(this, VisitType.DFS);
-		System.out.print(startingVertex+" ⟶ ");
+		int time = 0;
+		
+		System.out.print(startingVertex+" ⟶ "); // DA TOGLIERE
 		visit.setColor(startingVertex, Color.GRAY);
+		visit.setStartTime(startingVertex, time++);
+		visit.setDistance(startingVertex, 0.0);
 		
 		for (int v : getAdjacent(startingVertex)) {
 			if (visit.getColor(v) == Color.WHITE) {
-				visit.setColor(v, Color.GRAY);
 				visit.setParent(v, startingVertex);
-				getDFSTree(v);
+				visit.setDistance(v, visit.getDistance(startingVertex) + 1.0);
+				visit.setColor(v, Color.GRAY);
+				DFSUtil(v, visit);
 			}
 		}
 		visit.setColor(startingVertex, Color.BLACK);
+		visit.setEndTime(startingVertex, time++);
+		
 		return visit;
 	}
 	
@@ -384,14 +409,14 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	 * @param sourceVertex
 	 * @param visit
 	 */
-	private void DFSUtil(int sourceVertex, VisitForest visit) {
+	private void DFSTotUtil(int sourceVertex, VisitForest visit) {
 		// TODO Auto-generated method stub
 		visit.setColor(sourceVertex, Color.GRAY);
-		System.out.print(sourceVertex+" ⟶ ");
+		System.out.print(sourceVertex+" ⟶ ");// DA TOGLIERE
 		
 		for (int i = 0; i < size(); i++) {
 			if (visit.getColor(i) == Color.WHITE) {
-				DFSUtil(i, visit);
+				DFSTotUtil(i, visit);
 			}
 		}	
 	}
@@ -408,7 +433,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		for (int i = startingVertex; i < size(); i++) {
 			
 			if (visit.getColor(i) == Color.WHITE) {
-				DFSUtil(i, visit);
+				DFSTotUtil(i, visit);
 			}
 		}
 		return visit;
@@ -428,24 +453,29 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		for (int i = 0; i < vertexOrdering.length; i++) {
 			for (int j = vertexOrdering[i]; j < vertexOrdering.length; j++) {
 				if (visit.getColor(j) == Color.WHITE) {
-					DFSUtil(j, visit);
+					DFSTotUtil(j, visit);
 				}
 			}
 		}
-		
 		return visit;
 	}
 	
-	private void topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack) {
+	/**
+	 * Utility function to find topological sort.
+	 * @param v
+	 * @param visit
+	 * @param stack
+	 */
+	private void topologicalSortUtil(int v, VisitForest visit, Stack<Integer> stack) { // topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack)
 		// TODO Auto-generated method stub
-		visited[v] = true;
-		int i;
+		visit.setColor(v, Color.GRAY); // visited[v] = true;
+ 		int i;
 		
 		Iterator<Integer> it = getAdjacent(v).iterator();
 		while(it.hasNext()) {
 			i = it.next();
-			if (!visited[i]) {
-				topologicalSortUtil(i, visited, stack);
+			if (visit.getColor(i) == Color.WHITE) { // !visited[i]
+				topologicalSortUtil(i, visit, stack);
 			}
 		}
 		stack.push(v);	
@@ -455,22 +485,21 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	public int[] topologicalSort() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		if (isDAG()) {
-			
+			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 			Stack<Integer> stack = new Stack<>();
 			
 			int[] ord = new int[size()];
- 			boolean[] visited = new boolean[size()];
  			
  			int pos = 0;
  			int j;
  			
  			for (int i = 0; i < size(); i++) {
-				visited[i] = false;
+				visit.setColor(i, Color.WHITE);
 			}
  			
  			for (int i = 0; i < size(); i++) {
-				if (visited[i] == false) {
-					topologicalSortUtil(i, visited, stack);
+				if (visit.getColor(i) == Color.WHITE) { 
+					topologicalSortUtil(i, visit, stack);
 				}
 			}
  			
@@ -482,23 +511,153 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		}
 		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. "); 
 	}
-
-	@Override
+	
 	public Set<Set<Integer>> stronglyConnectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		if (isDirected()) {
-			return null;
+			
+			Set<Set<Integer>> setOfSCC = new HashSet<>();
+			
+			Stack<Integer> stack = new Stack<>();
+			
+			VisitForest visitForest = new VisitForest(this, VisitType.DFS_TOT);
+			
+			for (int i = 0; i < size(); i++) {
+				visitForest.setColor(i, Color.WHITE);
+			}
+			
+			for (int i = 0; i < size(); i++) {
+				if (visitForest.getColor(i) == Color.WHITE) {
+					fillOrder(i, visitForest, stack);
+				}
+			}
+			
+			AdjMatrixDirWeight trGraph = getTranspose();
+			VisitForest trForest = new VisitForest(trGraph, VisitType.DFS_TOT);
+			
+			for (int i = 0; i < trGraph.size(); i++) {
+				trForest.setColor(i, Color.WHITE);
+			}
+			
+			while (!stack.isEmpty()) {
+				
+				int v = stack.pop();
+				Set<Integer> set = new HashSet<>();
+				
+				if (trForest.getColor(v) == Color.WHITE) {
+					trGraph.dfsSCC(v, trForest, set);
+					setOfSCC.add(set);
+				}
+			}
+			return setOfSCC;
 		}
 		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. ");
+	}
+	
+	/**
+	 * Method that visits the graph and saves the
+	 * order of visit of the vertices in a stack.
+	 * @param v - vertex of the graph.
+	 * @param forest - visit forest.
+	 * @param stack - stack used to save the visiting order.
+	 */
+	private void fillOrder(int v, VisitForest forest, Stack<Integer> stack) {
+		// TODO Auto-generated method stub
+		forest.setColor(v, Color.GRAY);
+		
+		Iterator<Integer> iterator = getAdjacent(v).iterator();
+		
+		while (iterator.hasNext()) {
+			int n = iterator.next();
+			
+			if (forest.getColor(n) == Color.WHITE) {
+				fillOrder(n, forest, stack);
+			}
+		}
+		stack.push(v);
+	}
+	
+	/**
+	 * Method that given a graph, creates the transposed graph.
+	 * @return graph - the graph.
+	 */
+	AdjMatrixDirWeight getTranspose() {
+		// TODO Auto-generated method stub
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(size());
+		
+		for (int i = 0; i < size(); i++) {
+			
+			Iterator<Integer> iterator = getAdjacent(i).iterator();
+			
+			while (iterator.hasNext()) {
+				graph.addEdge(iterator.next(), i);
+			}
+		}
+		return graph;
+	}
+	
+	/**
+	 * Method that performs a DFS-TOT visit on the transposed graph.
+	 * It inserts the visited vertices into an Integer Set.
+	 * @param v - vertex of the graph.
+	 * @param forest - visit forest.
+	 * @param set - set of Integer.
+	 */
+	private void dfsSCC(int v, VisitForest forest, Set<Integer> set) {
+		// TODO Auto-generated method stub
+		forest.setColor(v, Color.GRAY);
+		set.add(v);
+		
+		int n;
+		
+		Iterator<Integer> iterator = getAdjacent(v).iterator();
+		
+		while (iterator.hasNext()) {
+			n = iterator.next();
+			if (forest.getColor(n) == Color.WHITE) {
+				dfsSCC(n, forest, set);
+			}
+		}	
 	}
 
 	@Override
 	public Set<Set<Integer>> connectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		if (!isDirected()) {
-			return null;
+			
+			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
+			
+			Set<Set<Integer>> setOfCC = new HashSet<>();
+			Set<Integer> visitedSet = new HashSet<>();
+			
+			for (int i : vertices) {
+				if (!visitedSet.contains(i)) {
+					
+					Set<Integer> resultedSet = new HashSet<>();
+					Stack<Integer> stack = new Stack<>();
+					
+					stack.push(i);
+					
+					while(!stack.isEmpty()) {
+						
+						int vertex = stack.pop();
+						visit.setColor(vertex, Color.GRAY);
+						
+						visitedSet.add(vertex);
+						resultedSet.add(vertex);
+						
+						for (int v : getAdjacent(vertex)) {
+							if (!visitedSet.contains(v)) {
+								stack.push(v);
+							}
+						}
+					}
+					setOfCC.add(resultedSet);
+				}
+			}
+			return setOfCC;
 		}
-		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. ");
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph. The graph must be Undirected! ");
 	}
 
 	@Override
@@ -552,5 +711,4 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			}
 		}
 	}
-
 }

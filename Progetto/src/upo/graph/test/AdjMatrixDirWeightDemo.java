@@ -111,9 +111,8 @@ public class AdjMatrixDirWeightDemo {
 	private static void breathFirstSearch(AdjMatrixDirWeight graph, int startingVertex) {
 		System.out.print("\n BFS starting from ("+startingVertex+"): ");
 		graph.getBFSTree(startingVertex);
-		
 	}
-	
+	// THIS
 	private static void depthFirstSearch(AdjMatrixDirWeight graph, int startingVertex) {
 		System.out.print("\n DFS starting from ("+startingVertex+"): ");
 		graph.getDFSTree(startingVertex);
@@ -141,8 +140,12 @@ public class AdjMatrixDirWeightDemo {
 		System.out.print("("+ord[graph.size()-1]+")");
 	}
 	
-//	private static void stronglyCC(AdjMatrixDirWeight graph) {
-//		System.out.print("\n Ordinamento topologico: ");
+	private static void stronglyCC(AdjMatrixDirWeight graph) {
+		System.out.print("\n Graph's Strongly Connected Components: "+graph.stronglyConnectedComponents());
+	}
+	
+//	private static void printConnectedComponents(AdjMatrixDirWeight graph) {
+//		System.out.print("\n Graph's Connected Components: "+graph.connectedComponents());
 //	}
 	
 	private static void getEdgeWeight(AdjMatrixDirWeight graph, int source, int target) {
@@ -349,8 +352,15 @@ public class AdjMatrixDirWeightDemo {
 		
 		System.out.println(); // next-line
 		
+		// addEdge(graph, 0, 2);
+		
 		showAsMatrix(graph);
 		
+//		printConnectedComponents(graph);
+		
+		stronglyCC(graph);
+		
+		System.out.println(); // next-line
 		System.out.println(); // next-line
 		
 		System.out.println("****************************************************************************************");
@@ -358,9 +368,57 @@ public class AdjMatrixDirWeightDemo {
 		System.out.println("****************************************************************************************");
 	}
 	
+	public static void bigGraphDemo() {
+		
+		System.out.println(); // next-line
+		
+		System.out.println("****************************************************************************************");
+		System.out.println("**** adjacency matrix - START OF BIG WEIGHTED DIRECT GRAPH DEMO - algorithm project ****");
+		System.out.println("****************************************************************************************");
+		
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(10);
+		
+		printVertices(graph);
+		
+		System.out.println(); // next-line
+		
+		addEdge(graph, 0, 4);
+		addEdge(graph, 0, 5);
+		addEdge(graph, 1, 0);
+		addEdge(graph, 2, 1);
+		addEdge(graph, 2, 6);
+		addEdge(graph, 2, 3);
+		addEdge(graph, 3, 2);
+		addEdge(graph, 4, 0);
+		addEdge(graph, 4, 7);
+		addEdge(graph, 5, 1);
+		addEdge(graph, 5, 4);
+		addEdge(graph, 6, 2);
+		addEdge(graph, 6, 5);
+		addEdge(graph, 6, 8);
+		addEdge(graph, 8, 7);
+		addEdge(graph, 8, 9);
+		addEdge(graph, 9, 8);
+		
+		System.out.println(); // next-line
+		
+		stronglyCC(graph);
+		
+		System.out.println(); // next-line
+		System.out.println(); // next-line
+		
+		System.out.println("****************************************************************************************");
+		System.out.println("***** adjacency matrix - END OF BIG WEIGHTED DIRECT GRAPH DEMO - algorithm project *****");
+		System.out.println("****************************************************************************************");
+	}
+	
 	public static void main(String[] args) {
 		
 		smallGraphDemo();
+		
+		System.out.print("\n|---------------------------------------NEW GRAPH---------------------------------------|\n");
+		
+		bigGraphDemo();
 		return;
 	}
 
