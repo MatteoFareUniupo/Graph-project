@@ -22,6 +22,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	
 	public int [] vertices;
 	public double [][] adjMatrix;
+	public static int time; /* visit time counter */
 	
 	public AdjMatrixDirWeight(int dim) {
 		// TODO Auto-generated constructor stub
@@ -81,7 +82,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	public void removeVertex(int index) throws NoSuchElementException {
 		// TODO Auto-generated method stub
 		if (!containsVertex(index)) {
-			throw new NoSuchElementException("The vertex "+index+" does not exist in the graph.");
+			throw new NoSuchElementException("Error: vertex ("+index+") does not exist! \n");
 		}
 		
 		int indexOfVertex = findIndex(index);
@@ -131,11 +132,14 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public void addEdge(int sourceVertexIndex, int targetVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub		
-		if (!containsVertex(sourceVertexIndex) || (sourceVertexIndex < 0)) {
-			throw new IllegalArgumentException("\n The vertex "+sourceVertexIndex+" it is not a valid argument. \n");
+		if (!containsVertex(sourceVertexIndex) && containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+sourceVertexIndex+") does not exist! \n");
 		}
-		if (!containsVertex(targetVertexIndex) || (targetVertexIndex) < 0) {
-			throw new IllegalArgumentException("\n The vertex "+targetVertexIndex+" it is not a valid argument. \n");
+		else if (!containsVertex(targetVertexIndex) && containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+targetVertexIndex+") does not exist! \n");
+		}
+		else if (!containsVertex(sourceVertexIndex) && !containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertices ("+sourceVertexIndex+") and ("+targetVertexIndex+") do not exist! \n");
 		}
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
@@ -146,33 +150,34 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		else if (adjMatrix[indexOfTarget][indexOfSource] == 0) {
 			adjMatrix[indexOfTarget][indexOfSource] = defaultEdgeWeight;
 		}
-		else {
-			
-			if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
-				System.out.print("\n The edge ["+indexOfSource+"]-["+indexOfTarget+"] is already in the graph. \n");
-			}
-			if (adjMatrix[indexOfTarget][indexOfSource] != 0) {
-				System.out.print("\n The edge ["+indexOfTarget+"]-["+indexOfSource+"] is already in the graph. \n");
-			}
-		}
+//		else { // is already in the graph
+//			
+//			if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
+//				System.out.print("\n The edge ["+indexOfSource+"]-["+indexOfTarget+"] is already in the graph. \n");
+//			}
+//			if (adjMatrix[indexOfTarget][indexOfSource] != 0) {
+//				System.out.print("\n The edge ["+indexOfTarget+"]-["+indexOfSource+"] is already in the graph. \n");
+//			}
+//		}
 	}
 
 	@Override
 	public boolean containsEdge(int sourceVertexIndex, int targetVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub		
-		if (!containsVertex(sourceVertexIndex) || (sourceVertexIndex < 0)) {
-			throw new IllegalArgumentException("\n The vertex "+sourceVertexIndex+" it is not a valid argument. \n");
+		if (!containsVertex(sourceVertexIndex) && containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+sourceVertexIndex+") does not exist! \n");
 		}
-		if (!containsVertex(targetVertexIndex) || (targetVertexIndex) < 0) {
-			throw new IllegalArgumentException("\n The vertex "+targetVertexIndex+" it is not a valid argument. \n");
+		else if (!containsVertex(targetVertexIndex) && containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+targetVertexIndex+") does not exist! \n");
 		}
+		else if (!containsVertex(sourceVertexIndex) && !containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertices ("+sourceVertexIndex+") and ("+targetVertexIndex+") do not exist! \n");
+		}
+		
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
 		
 		if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
-			return true;
-		}
-		else if (adjMatrix[indexOfTarget][indexOfSource] != 0) {
 			return true;
 		}
 		else 
@@ -183,31 +188,26 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	public void removeEdge(int sourceVertexIndex, int targetVertexIndex)
 			throws IllegalArgumentException, NoSuchElementException {
 		// TODO Auto-generated method stub
-		if (sourceVertexIndex < 0) {
-			throw new IllegalArgumentException("\n The vertex "+sourceVertexIndex+" it is not a valid argument. \n");
+		if (!containsVertex(sourceVertexIndex) && containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+sourceVertexIndex+") does not exist! \n");
 		}
-		if (!containsVertex(sourceVertexIndex)) {
-			throw new NoSuchElementException("The vertex "+sourceVertexIndex+" does not exist in the graph.");
+		else if (!containsVertex(targetVertexIndex) && containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+targetVertexIndex+") does not exist! \n");
 		}
-		if (targetVertexIndex < 0) {
-			throw new IllegalArgumentException("\n The vertex "+targetVertexIndex+" it is not a valid argument. \n");
+		else if (!containsVertex(sourceVertexIndex) && !containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertices ("+sourceVertexIndex+") and ("+targetVertexIndex+") do not exist! \n");
 		}
-		if (!containsVertex(targetVertexIndex)) {
-			throw new NoSuchElementException("The vertex "+targetVertexIndex+" does not exist in the graph.");
+		else if (!containsEdge(sourceVertexIndex, targetVertexIndex)) {
+			throw new NoSuchElementException("Error: edge ["+sourceVertexIndex+"]-["+targetVertexIndex+"] does not exist! \n");
 		}
+		
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
 		
 		if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
+			
 			adjMatrix[indexOfSource][indexOfTarget] = 0;
 			System.out.print(" The edge ["+indexOfSource+"-"+indexOfTarget+"] is removed. \n");
-		}
-		else if (adjMatrix[indexOfTarget][indexOfSource] != 0) {
-			adjMatrix[indexOfSource][indexOfTarget] = 0;
-			System.out.print(" The edge ["+indexOfTarget+"-"+indexOfSource+"] is removed. \n");
-		}
-		else {
-			System.out.print(" The edge ["+indexOfSource+"-"+indexOfTarget+"] does not exist in the graph. \n");
 		}
 	}
 
@@ -215,7 +215,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	public Set<Integer> getAdjacent(int vertexIndex) throws NoSuchElementException {
 		// TODO Auto-generated method stub
 		if (!containsVertex(vertexIndex)) {
-			throw new IllegalArgumentException("\n The vertex "+vertexIndex+" does not exist in the graph. \n");
+			throw new IllegalArgumentException("Error: vertex ("+vertexIndex+") does not exist! \n");
 		}
 		Set<Integer> adj = new HashSet<Integer>();
 		int indexOfVertex = findIndex(vertexIndex);
@@ -231,20 +231,20 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public boolean isAdjacent(int targetVertexIndex, int sourceVertexIndex) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		if (!containsVertex(sourceVertexIndex) || (sourceVertexIndex < 0)) {
-			throw new IllegalArgumentException("\n The vertex "+sourceVertexIndex+" it is not a valid argument. \n");
+		if (!containsVertex(sourceVertexIndex) && containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+sourceVertexIndex+") does not exist! \n");
 		}
-		if (!containsVertex(targetVertexIndex) || (targetVertexIndex) < 0) {
-			throw new IllegalArgumentException("\n The vertex "+targetVertexIndex+" it is not a valid argument. \n");
+		else if (!containsVertex(targetVertexIndex) && containsVertex(sourceVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertex ("+targetVertexIndex+") does not exist! \n");
 		}
-		int indexOfSource = findIndex(sourceVertexIndex);
-		int indexOfTarget = findIndex(targetVertexIndex);
+		else if (!containsVertex(sourceVertexIndex) && !containsVertex(targetVertexIndex)) {
+			throw new IllegalArgumentException("Error: vertices ("+sourceVertexIndex+") and ("+targetVertexIndex+") do not exist! \n");
+		}
 		
-		if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
+		if (containsEdge(targetVertexIndex, sourceVertexIndex) == true) {
 			return true;
 		}
-		else 
-			return false;
+		return false;
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			int head = queue.peek(); /* Equal to: "int head = queue.poll();" -> with this method "queue.remove()" must be removed. */
 			System.out.print(head+" ⟶ "); // DA TOGLIERE 
 			
-			for (int i : getAdjacent(head)) {  //  (int i = 0; i < size(); i++) così esplora tutti i vertici
+			for (int i : getAdjacent(head)) { 
 				if (visit.getColor(i) == Color.WHITE) { 
 					visit.setColor(i, Color.GRAY);
 					visit.setParent(i, head);
@@ -367,41 +367,44 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	 * @param sourceVertex
 	 * @param visit
 	 */
-	private void DFSUtil(int sourceVertex, VisitForest visit) {
+	private void dfsUtil(int sourceVertex, VisitForest visit) {
 		// TODO Auto-generated method stub
 		visit.setColor(sourceVertex, Color.GRAY);
+		visit.setStartTime(sourceVertex, time);
+		time++;
+		
 		System.out.print(sourceVertex+" ⟶ ");// DA TOGLIERE
 		
-		for (int i : getAdjacent(sourceVertex)) {
-			if (visit.getColor(i) == Color.WHITE) {
-				DFSUtil(i, visit);
+		for (int vertex : getAdjacent(sourceVertex)) {
+			if (visit.getColor(vertex) == Color.WHITE) {
+				visit.setParent(vertex, sourceVertex);
+				dfsUtil(vertex, visit);
 			}
-		}	
-	}
-
+		}
+		visit.setColor(sourceVertex, Color.BLACK);
+		visit.setEndTime(sourceVertex, time);
+		time++;
+	}	
+	
 	@Override
 	public VisitForest getDFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
 		VisitForest visit = new VisitForest(this, VisitType.DFS);
-		int time = 0;
 		
-		System.out.print(startingVertex+" ⟶ "); // DA TOGLIERE
-		visit.setColor(startingVertex, Color.GRAY);
-		visit.setStartTime(startingVertex, time++);
-		visit.setDistance(startingVertex, 0.0);
+		System.out.print("dfs("+startingVertex+"): ");
 		
-		for (int v : getAdjacent(startingVertex)) {
-			if (visit.getColor(v) == Color.WHITE) {
-				visit.setParent(v, startingVertex);
-				visit.setDistance(v, visit.getDistance(startingVertex) + 1.0);
-				visit.setColor(v, Color.GRAY);
-				DFSUtil(v, visit);
-			}
+		for (int i : vertices) {
+			visit.setColor(i, Color.WHITE);
+			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY);
+			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY);
 		}
-		visit.setColor(startingVertex, Color.BLACK);
-		visit.setEndTime(startingVertex, time++);
+		time = 0;
 		
-		return visit;
+		dfsUtil(startingVertex, visit);
+		
+		System.out.print("end. \n\n"); 
+		
+		return visit;	
 	}
 	
 	/**
@@ -418,7 +421,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			if (visit.getColor(i) == Color.WHITE) {
 				DFSTotUtil(i, visit);
 			}
-		}	
+		}
 	}
 
 	@Override
@@ -426,28 +429,28 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
 		if (!containsVertex(startingVertex)) {
-			throw new IllegalArgumentException("\n The vertex ("+startingVertex+") it is not a valid argument. \n");
+			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
 		}
 		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
 		for (int i = startingVertex; i < size(); i++) {
-			
 			if (visit.getColor(i) == Color.WHITE) {
 				DFSTotUtil(i, visit);
 			}
 		}
 		return visit;
 	}
-
+	
 	@Override /* MAYBE IS WRONG, I DON'T KNOW */
 	public VisitForest getDFSTOTForest(int[] vertexOrdering)
 			throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < vertexOrdering.length; i++) {
+		for (int i = 0; i < size(); i++) {
 			if (!containsVertex(vertexOrdering[i])) {
-				throw new IllegalArgumentException("\n The vertex ("+vertexOrdering[i]+") it is not a valid argument. ");
+				throw new IllegalArgumentException("Error: vertex ("+vertexOrdering[i]+") does not exist! \n");
 			}
 		}
+		
 		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
 		for (int i = 0; i < vertexOrdering.length; i++) {
@@ -623,7 +626,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public Set<Set<Integer>> connectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		if (!isDirected()) {
+		if (isDirected() == false) {
 			
 			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 			
@@ -657,7 +660,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			}
 			return setOfCC;
 		}
-		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph. The graph must be Undirected! ");
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph. The graph must be Undirected! \n");
 	}
 
 	@Override

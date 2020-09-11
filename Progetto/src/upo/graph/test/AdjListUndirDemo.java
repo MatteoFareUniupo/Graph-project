@@ -1,7 +1,5 @@
 package upo.graph.test;
 
-//import java.util.Scanner;
-
 import upo.graph.implementation.AdjListUndir;
 
 public class AdjListUndirDemo {
@@ -205,6 +203,9 @@ public class AdjListUndirDemo {
 		System.out.println(); /*** next-line ***/
 		
 		removeVertex(graph, 5);
+		
+		System.out.println(); /*** next-line ***/
+		
 		verifyVertex(graph, 5);
 		/*** verifyEdge(graph, 3, 5); throws exception because vertex (5) is no more. ***/
 		/*** removeEdge(graph, 3, 5); throws exception because vertex (5) is no more. ***/
@@ -294,6 +295,10 @@ public class AdjListUndirDemo {
 		
 		System.out.println(); // next-line
 		
+		depthFirstSearch(graph, 0);
+		
+		System.out.println(); // next-line
+		
 		printConnectedComponents(graph);
 		
 		System.out.println(); // next-line
@@ -304,11 +309,47 @@ public class AdjListUndirDemo {
 		System.out.println("**********************************************************************");
 	}
 	
+	public static void testGraph() {
+		
+		/* Initialize graph for testing */
+		AdjListUndir graph = new AdjListUndir(6);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(4, 3);
+		graph.addEdge(5, 1);
+		
+//		//breathFirstSearch(graph, 0);
+//		
+//		for (int i = 0; i < graph.size(); i++) {
+//			System.out.print("s("+i+"):"+graph.getDFSTree(0).getStartTime(i)+" ");
+//		}
+//		
+//		System.out.println(); // next-line
+//		System.out.println(); // next-line
+//		
+//		for (int i = 0; i < graph.size(); i++) {
+//			System.out.print("e("+i+"):"+graph.getDFSTree(0).getEndTime(i)+" ");
+//		}
+//			
+//		System.out.println(); // next-line
+//		System.out.println(); // next-line
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		smallGraphDemo();
+		
 		System.out.print("\n|------------------------------NEW GRAPH------------------------------|\n");
+		
 		bigGraphDemo();
+		
+		System.out.print("\n|------------------------------NEW GRAPH------------------------------|\n");
+		
+		testGraph();
 		
 		return;
 	}

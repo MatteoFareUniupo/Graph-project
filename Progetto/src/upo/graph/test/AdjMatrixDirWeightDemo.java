@@ -36,12 +36,12 @@ public class AdjMatrixDirWeightDemo {
 	}
 	
 	private static void addEdge(AdjMatrixDirWeight graph, int source, int target) {
-		System.out.print("\n Aggiunto arco ["+source+"]-["+target+"] nel grafo.");
+		System.out.print("\n Aggiunto arco ["+source+"]⟶["+target+"] nel grafo.");
 		graph.addEdge(source, target);
 	}
 	
 	private static void verifyEdge(AdjMatrixDirWeight graph, int source, int target) {
-		System.out.print("\n L'arco ["+source+"]-["+target+"] è presente nel grafo ? ");
+		System.out.print("\n L'arco ["+source+"]⟶["+target+"] è presente nel grafo ? ");
 		Boolean verify = graph.containsEdge(source, target);
 		
 		if (verify) {
@@ -53,7 +53,7 @@ public class AdjMatrixDirWeightDemo {
 	}
 	
 	private static void removeEdge(AdjMatrixDirWeight graph, int source, int target) {
-		System.out.print("\n Rimosso vertice ["+source+"]-["+target+"] dal grafo -> ");
+		System.out.print("\n Rimosso arco ["+source+"]-["+target+"] dal grafo -> ");
 		graph.removeEdge(source, target);
 	}
 	
@@ -259,10 +259,12 @@ public class AdjMatrixDirWeightDemo {
 		System.out.println(); // next-line
 		
 		verifyEdge(graph, 0, 1);
+		verifyEdge(graph, 1, 0);
 		verifyEdge(graph, 1, 4);
 		verifyEdge(graph, 2, 0);
 		verifyEdge(graph, 2, 3);
 		verifyEdge(graph, 3, 4);
+		verifyEdge(graph, 4, 3);
 		verifyEdge(graph, 4, 0);
 		
 		System.out.println(); // next-line
@@ -307,11 +309,11 @@ public class AdjMatrixDirWeightDemo {
 		System.out.println(); // next-line
 		
 		System.out.print("\n Depth-First Search visit: ");
-		depthFirstSearch(graph, 0);
-		depthFirstSearch(graph, 1);
-		depthFirstSearch(graph, 2);
-		depthFirstSearch(graph, 3);
-		depthFirstSearch(graph, 4);
+//		depthFirstSearch(graph, 0);
+//		depthFirstSearch(graph, 1);
+//		depthFirstSearch(graph, 2);
+//		depthFirstSearch(graph, 3);
+//		depthFirstSearch(graph, 4);
 		
 		System.out.print("\n\n Complete Depth-First Search visit: ");
 		totalDFS(graph, 0);
@@ -402,6 +404,10 @@ public class AdjMatrixDirWeightDemo {
 		
 		System.out.println(); // next-line
 		
+		depthFirstSearch(graph, 0);
+		
+		System.out.println(); // next-line
+		
 		stronglyCC(graph);
 		
 		System.out.println(); // next-line
@@ -412,6 +418,38 @@ public class AdjMatrixDirWeightDemo {
 		System.out.println("****************************************************************************************");
 	}
 	
+	private static void testGraph() {
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(7);
+		
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(0, 5);
+		graph.addEdge(1, 4);
+		graph.addEdge(2, 1);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 4);
+		graph.addEdge(2, 6);
+		graph.addEdge(4, 3);
+		graph.addEdge(5, 2);
+		graph.addEdge(5, 6);
+		graph.addEdge(6, 3);
+		
+		showAsAdjList(graph);
+		
+		System.out.println(); // next-line
+		
+		depthFirstSearch(graph, 0);
+		
+		System.out.println(); // next-line
+		
+		topologicalSort(graph);	
+		
+		System.out.println(); // next-line
+		System.out.println(); // next-line
+	}
+	
 	public static void main(String[] args) {
 		
 		smallGraphDemo();
@@ -419,6 +457,11 @@ public class AdjMatrixDirWeightDemo {
 		System.out.print("\n|---------------------------------------NEW GRAPH---------------------------------------|\n");
 		
 		bigGraphDemo();
+		
+		System.out.print("\n|---------------------------------------NEW GRAPH---------------------------------------|\n");	
+		
+		testGraph();
+		
 		return;
 	}
 

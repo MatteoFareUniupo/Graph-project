@@ -47,7 +47,7 @@ public interface Graph {
 	public void removeVertex(int index) throws NoSuchElementException;
 	
 	/**
-	 * Aggiunge un arco tra i due vertici specificati, se non esiste. Se esiste gi� un arco tra i due vertici,
+	 * Aggiunge un arco tra i due vertici specificati, se non esiste. Se esiste già un arco tra i due vertici,
 	 * non fa nulla.
 	 * @param sourceVertexIndex il vertice da cui esce l'arco.
 	 * @param targetVertexIndex il vertice nel quale entra l'arco.
@@ -86,7 +86,7 @@ public interface Graph {
 	
 	/**
 	 * Controlla se due vertici sono adiacenti. Restituisce <tt>true</tt> se <code>targetVertexIndex</code>
-	 * � adiacente a <code>sourceVertexIndex</code>, <tt>false</tt> altrimenti.
+	 * è adiacente a <code>sourceVertexIndex</code>, <tt>false</tt> altrimenti.
 	 * @param targetVertexIndex il vertice di arrivo.
 	 * @param sourceVertexIndex il vertice di partenza.
 	 * @return <tt>true</tt> se i due vertici sono adiacenti, <tt>false</tt> altrimenti.
