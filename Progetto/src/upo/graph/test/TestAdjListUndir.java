@@ -235,7 +235,7 @@ public class TestAdjListUndir {
 	public void testBFS() {
 		
 		/* Initialize graph for testing */
-		AdjListUndir graph = new AdjListUndir(6);
+		AdjListUndir graph = new AdjListUndir(7);
 		
 		/* Add Edges to the graph */
 		graph.addEdge(0, 1);
@@ -246,47 +246,91 @@ public class TestAdjListUndir {
 		graph.addEdge(5, 1);
 		
 		/* Verify parents of vertices */
+		/* starting visit from (0) */
+		System.out.print("\n• BFS algorith execution: \n");
+		assertThrows(NullPointerException.class, () -> graph.getBFSTree(0).getParent(0));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getBFSTree(0).getParent(1));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getBFSTree(0).getParent(2));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getBFSTree(0).getParent(3));
+		System.out.println("end. "); // next-line
 		assertEquals(3, graph.getBFSTree(0).getParent(4));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getBFSTree(0).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getBFSTree(0).getParent(6));
+		System.out.println("end. "); // next-line
 		
+		/* starting visit from (1) */
+		assertThrows(NullPointerException.class, () -> graph.getBFSTree(1).getParent(1));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getBFSTree(1).getParent(0));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getBFSTree(1).getParent(2));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getBFSTree(1).getParent(3));
+		System.out.println("end. "); // next-line
 		assertEquals(3, graph.getBFSTree(1).getParent(4));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getBFSTree(1).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getBFSTree(1).getParent(6));
+		System.out.println("end. "); // next-line
 		
 		/* Verify distances of vertices */
-		assertEquals(0.0, graph.getBFSTree(0).getDistance(0), 0.0);
-		assertEquals(1.0, graph.getBFSTree(0).getDistance(1), 0.0);
-		assertEquals(1.0, graph.getBFSTree(0).getDistance(2), 0.0);
-		assertEquals(2.0, graph.getBFSTree(0).getDistance(3), 0.0);
-		assertEquals(3.0, graph.getBFSTree(0).getDistance(4), 0.0);
-		assertEquals(2.0, graph.getBFSTree(0).getDistance(5), 0.0);
+		/* starting visit from (0) */
+		assertEquals(0.0, graph.getBFSTree(0).getDistance(0), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(1.0, graph.getBFSTree(0).getDistance(1), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(1.0, graph.getBFSTree(0).getDistance(2), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(2.0, graph.getBFSTree(0).getDistance(3), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(3.0, graph.getBFSTree(0).getDistance(4), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(2.0, graph.getBFSTree(0).getDistance(5), 0.00);
+		System.out.println("end. "); // next-line
 		
-		assertEquals(1.0, graph.getBFSTree(1).getDistance(0), 0.0);
-		assertEquals(0.0, graph.getBFSTree(1).getDistance(1), 0.0);
-		assertEquals(2.0, graph.getBFSTree(1).getDistance(2), 0.0);
-		assertEquals(1.0, graph.getBFSTree(1).getDistance(3), 0.0);
-		assertEquals(2.0, graph.getBFSTree(1).getDistance(4), 0.0);
-		assertEquals(1.0, graph.getBFSTree(1).getDistance(5), 0.0);
+		/* starting visit from (1) */
+		assertEquals(1.0, graph.getBFSTree(1).getDistance(0), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(0.0, graph.getBFSTree(1).getDistance(1), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(2.0, graph.getBFSTree(1).getDistance(2), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(1.0, graph.getBFSTree(1).getDistance(3), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(2.0, graph.getBFSTree(1).getDistance(4), 0.00);
+		System.out.println("end. "); // next-line
+		assertEquals(1.0, graph.getBFSTree(1).getDistance(5), 0.00);
+		System.out.println("end. "); // next-line
 		
 		/*Verify colors of vertices at the end of the visit */
+		/* starting visit from (0) */
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(0).toString());
+		System.out.println("end. "); // next-line
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(1).toString());
+		System.out.println("end. "); // next-line
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(2).toString());
+		System.out.println("end. "); // next-line
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(3).toString());
+		System.out.println("end. "); // next-line
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(4).toString());
+		System.out.println("end. "); // next-line
 		assertEquals("BLACK", graph.getBFSTree(0).getColor(5).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("WHITE", graph.getBFSTree(0).getColor(6).toString());
+		System.out.println("end. "); // next-line	
 	}
 	
 	@Test
 	public void testDFS() {
 		
 		/* Initialize graph for testing */
-		AdjListUndir graph = new AdjListUndir(6);
+		AdjListUndir graph = new AdjListUndir(7);
 		
 		/* Add Edges to the graph */
 		graph.addEdge(0, 1);
@@ -295,44 +339,217 @@ public class TestAdjListUndir {
 		graph.addEdge(2, 5);
 		graph.addEdge(4, 3);
 		
+		System.out.print("\n• DFS algorith execution: \n");
 		/* Verify parents of vertices */
+		/* starting visit from (0) */
+		assertThrows(NullPointerException.class, () -> graph.getDFSTree(0).getParent(0));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getDFSTree(0).getParent(1));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getDFSTree(0).getParent(2));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getDFSTree(0).getParent(3));
+		System.out.println("end. "); // next-line
 		assertEquals(3, graph.getDFSTree(0).getParent(4));
+		System.out.println("end. "); // next-line
 		assertEquals(2, graph.getDFSTree(0).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getDFSTree(0).getParent(6));
+		System.out.println("end. "); // next-line
 		
+		/* starting visit from (1) */
+		assertThrows(NullPointerException.class, () -> graph.getDFSTree(1).getParent(1));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getDFSTree(1).getParent(0));
+		System.out.println("end. "); // next-line
 		assertEquals(0, graph.getDFSTree(1).getParent(2));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getDFSTree(1).getParent(3));
+		System.out.println("end. "); // next-line
 		assertEquals(3, graph.getDFSTree(1).getParent(4));
+		System.out.println("end. "); // next-line
 		assertEquals(2, graph.getDFSTree(1).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getDFSTree(1).getParent(6));
+		System.out.println("end. "); // next-line
 		
 		/* Verify the Starting and Ending time of vertices */
+		/* starting visit from (0) */
 		assertEquals(0, graph.getDFSTree(0).getStartTime(0));
+		System.out.println("end. "); // next-line
 		assertEquals(1, graph.getDFSTree(0).getStartTime(1));
+		System.out.println("end. "); // next-line
 		assertEquals(7, graph.getDFSTree(0).getStartTime(2));
+		System.out.println("end. "); // next-line
 		assertEquals(2, graph.getDFSTree(0).getStartTime(3));
+		System.out.println("end. "); // next-line
 		assertEquals(3, graph.getDFSTree(0).getStartTime(4));
+		System.out.println("end. "); // next-line
 		assertEquals(8, graph.getDFSTree(0).getStartTime(5));
+		System.out.println("end. "); // next-line
 		
 		assertEquals(11, graph.getDFSTree(0).getEndTime(0));
+		System.out.println("end. "); // next-line
 		assertEquals(6, graph.getDFSTree(0).getEndTime(1));
+		System.out.println("end. "); // next-line
 		assertEquals(10, graph.getDFSTree(0).getEndTime(2));
+		System.out.println("end. "); // next-line
 		assertEquals(5, graph.getDFSTree(0).getEndTime(3));
+		System.out.println("end. "); // next-line
 		assertEquals(4, graph.getDFSTree(0).getEndTime(4));
-		assertEquals(9, graph.getDFSTree(0).getEndTime(5));
+		System.out.println("end. "); // next-line
+		assertEquals(9, graph.getDFSTree(0).getEndTime(5));	
+		System.out.println("end. "); // next-line
 		
-		
+		/* Verify vertices color at the end of the visit */
+		/* starting visit from (0) */
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(0).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(1).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(2).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(3).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(4).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTree(0).getColor(5).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("WHITE", graph.getDFSTree(0).getColor(6).toString());
+		System.out.println("end. "); // next-line
 	}
 	
 	@Test
 	public void testDFSTOT() {
 		
+		/* Initialize graph for testing */
+		AdjListUndir graph = new AdjListUndir(8);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(3, 4);
+		graph.addEdge(7, 6);
+		
+		System.out.print("\n• DFS-TOT algorith execution: \n");
+		/* Verify parents of vertices */
+		/* starting visit from (0) */
+		assertThrows(NullPointerException.class, () -> graph.getDFSTOTForest(0).getParent(0));
+		System.out.println("end. "); // next-line
+		assertEquals(0, graph.getDFSTOTForest(0).getParent(1));
+		System.out.println("end. "); // next-line
+		assertEquals(1, graph.getDFSTOTForest(0).getParent(2));
+		System.out.println("end. "); // next-line
+		assertEquals(2, graph.getDFSTOTForest(0).getParent(3));
+		System.out.println("end. "); // next-line
+		assertEquals(3, graph.getDFSTOTForest(0).getParent(4));
+		System.out.println("end. "); // next-line
+		assertEquals(2, graph.getDFSTOTForest(0).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getDFSTOTForest(0).getParent(6));
+		System.out.println("end. "); // next-line
+		assertEquals(6, graph.getDFSTOTForest(0).getParent(7));
+		System.out.println("end. "); // next-line
+		
+		/* starting visit from (1) */
+		assertThrows(NullPointerException.class, () -> graph.getDFSTOTForest(1).getParent(1));
+		System.out.println("end. "); // next-line
+		assertEquals(1, graph.getDFSTOTForest(1).getParent(0));
+		System.out.println("end. "); // next-line
+		assertEquals(0, graph.getDFSTOTForest(1).getParent(2));
+		System.out.println("end. "); // next-line
+		assertEquals(2, graph.getDFSTOTForest(1).getParent(3));
+		System.out.println("end. "); // next-line
+		assertEquals(3, graph.getDFSTOTForest(1).getParent(4));
+		System.out.println("end. "); // next-line
+		assertEquals(2, graph.getDFSTOTForest(1).getParent(5));
+		System.out.println("end. "); // next-line
+		assertThrows(NullPointerException.class, () -> graph.getDFSTOTForest(1).getParent(6));
+		System.out.println("end. "); // next-line
+		assertEquals(6, graph.getDFSTOTForest(1).getParent(7));
+		System.out.println("end. "); // next-line
+		
+		/* Verify the Starting and Ending time of vertices */
+		/* starting visit from (0) */
+		assertEquals(0, graph.getDFSTOTForest(0).getStartTime(0));
+		System.out.println("end. "); // next-line
+		assertEquals(1, graph.getDFSTOTForest(0).getStartTime(1));
+		System.out.println("end. "); // next-line
+		assertEquals(2, graph.getDFSTOTForest(0).getStartTime(2));
+		System.out.println("end. "); // next-line
+		assertEquals(3, graph.getDFSTOTForest(0).getStartTime(3));
+		System.out.println("end. "); // next-line
+		assertEquals(4, graph.getDFSTOTForest(0).getStartTime(4));
+		System.out.println("end. "); // next-line
+		assertEquals(7, graph.getDFSTOTForest(0).getStartTime(5));
+		System.out.println("end. "); // next-line
+		assertEquals(12, graph.getDFSTOTForest(0).getStartTime(6));
+		System.out.println("end. "); // next-line
+		assertEquals(13, graph.getDFSTOTForest(0).getStartTime(7));
+		System.out.println("end. "); // next-line
+		
+		assertEquals(11, graph.getDFSTOTForest(0).getEndTime(0));
+		System.out.println("end. "); // next-line
+		assertEquals(10, graph.getDFSTOTForest(0).getEndTime(1));
+		System.out.println("end. "); // next-line
+		assertEquals(9, graph.getDFSTOTForest(0).getEndTime(2));
+		System.out.println("end. "); // next-line
+		assertEquals(6, graph.getDFSTOTForest(0).getEndTime(3));
+		System.out.println("end. "); // next-line
+		assertEquals(5, graph.getDFSTOTForest(0).getEndTime(4));
+		System.out.println("end. "); // next-line
+		assertEquals(8, graph.getDFSTOTForest(0).getEndTime(5));
+		System.out.println("end. "); // next-line
+		assertEquals(15, graph.getDFSTOTForest(0).getEndTime(6));
+		System.out.println("end. "); // next-line
+		assertEquals(14, graph.getDFSTOTForest(0).getEndTime(7));
+		System.out.println("end. "); // next-line
+		
+		/* Verify vertices color at the end of the visit */
+		/* starting visit from (0) */
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(0).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(1).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(2).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(3).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(4).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(5).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(6).toString());
+		System.out.println("end. "); // next-line
+		assertEquals("BLACK", graph.getDFSTOTForest(0).getColor(7).toString());	
+		System.out.println("end. "); // next-line
 	}
 	
 	@Test
-	public void testDFSTOTOrdering() {
+	public void testFollowOrderDFSTOT() {
+		
+		/* Initialize graph for testing */
+		AdjListUndir graph = new AdjListUndir(7);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(4, 3);
+		
+		int [] order = {1, 0, 2, 3, 4, 5, 6};
+		
+		System.out.print("\n• TOT-DFS following array { ");
+		for (int i = 0; i < order.length; i++) {
+			System.out.print(order[i]+" ");
+		}
+		System.out.print("}:\n"); 
+		graph.getDFSTOTForest(order);
 		
 	}
 	
@@ -375,5 +592,5 @@ public class TestAdjListUndir {
 		
 		unsupportedOperation = assertThrows(UnsupportedOperationException.class, () -> graph.stronglyConnectedComponents());
 		assertEquals("\n Error: this operation is not allowed on this graph - It must be Direct!!! \n", unsupportedOperation.getMessage());
-	}	
+	}
 }

@@ -3,12 +3,12 @@ package upo.graph.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.junit.Test;
 
+import upo.graph.base.WeightedGraph;
 import upo.graph.implementation.AdjMatrixDirWeight;
 
 public class TestAdjMatrixDirWeight {
@@ -247,6 +247,22 @@ public class TestAdjMatrixDirWeight {
 	@Test
 	public void testBFS() {
 		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(8);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(3, 4);
+		graph.addEdge(7, 6);
+		
+		/* Verify that BFS is not supported for weighted graph */
+		assertThrows(UnsupportedOperationException.class, () -> graph.getBFSTree(0));	
+		
 	}
 	
 	@Test
@@ -264,68 +280,47 @@ public class TestAdjMatrixDirWeight {
 		graph.addEdge(2, 4);
 		graph.addEdge(3, 4);
 		
-		//System.out.print(" "+graph.getDFSTree(0).toString());
-		
-		/* Verify parents of vertices */
-		/* starting visit from vertex (0) */
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(0).getParent(0));
-		assertEquals(0, graph.getDFSTree(0).getParent(1));
-		assertEquals(0, graph.getDFSTree(0).getParent(2));
-		assertEquals(1, graph.getDFSTree(0).getParent(3));
-		graph.getDFSTree(0).getParent(4);
-		
-		/* starting visit from vertex (1) */
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(1).getParent(1));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(1).getParent(0));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(1).getParent(2));
-		assertEquals(1, graph.getDFSTree(1).getParent(3));
-		assertEquals(3, graph.getDFSTree(1).getParent(4));
-		
-		/* starting visit from vertex (2) */
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(2).getParent(2));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(2).getParent(1));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(2).getParent(0));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(2).getParent(3));
-		assertEquals(2, graph.getDFSTree(2).getParent(4));
-		
-		/* starting visit from vertex (3) */
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(3).getParent(3));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(3).getParent(0));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(3).getParent(1));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(3).getParent(2));
-		assertEquals(3, graph.getDFSTree(3).getParent(4));
-		
-		/* starting visit from vertex (4) */
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(4).getParent(4));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(4).getParent(0));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(4).getParent(1));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(4).getParent(2));
-		assertThrows(NullPointerException.class, () -> graph.getDFSTree(4).getParent(3));
-		
-		/* Verify the Starting and Ending time of vertices */
-		assertEquals(0, graph.getDFSTree(0).getStartTime(0));
-		assertEquals(1, graph.getDFSTree(0).getStartTime(1));
-		assertEquals(7, graph.getDFSTree(0).getStartTime(2));
-		assertEquals(2, graph.getDFSTree(0).getStartTime(3));
-		assertEquals(3, graph.getDFSTree(0).getStartTime(4));
-		
-		assertEquals(9, graph.getDFSTree(0).getEndTime(0));
-		assertEquals(6, graph.getDFSTree(0).getEndTime(1));
-		assertEquals(8, graph.getDFSTree(0).getEndTime(2));
-		assertEquals(5, graph.getDFSTree(0).getEndTime(3));
-		assertEquals(4, graph.getDFSTree(0).getEndTime(4));
-		
-		assertEquals((int)Double.POSITIVE_INFINITY, graph.getDFSTree(4).getStartTime(0));		
+		assertThrows(UnsupportedOperationException.class, () -> graph.getDFSTree(0));	
 	}
 	
 	@Test
 	public void testDFSTOT() {
 		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(8);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(3, 4);
+		graph.addEdge(7, 6);
+		
+		/* Verify that DFS is not supported for weighted graph */
+		assertThrows(UnsupportedOperationException.class, () -> graph.getDFSTOTForest(0));
 	}
 	
 	@Test
 	public void testDFSTOTOrdering() {
 		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(8);
+		
+		/* Add Edges to the graph */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 5);
+		graph.addEdge(3, 4);
+		graph.addEdge(7, 6);
+		
+		/* Verify that DFS is not supported for weighted graph */
+		assertThrows(UnsupportedOperationException.class, () -> graph.getDFSTOTForest(0));
 	}
 	
 	@Test
@@ -347,14 +342,17 @@ public class TestAdjMatrixDirWeight {
 		graph.addEdge(5, 6);
 		graph.addEdge(6, 3);
 		
-		/* Verify topological Order */
-		int[] ord = graph.topologicalSort();
-		ArrayList<Integer> topologicalOrder = new ArrayList<>();
+//		/* Verify topological Order */
+//		int[] ord = graph.topologicalSort();
+//		ArrayList<Integer> topologicalOrder = new ArrayList<>();
+//		
+//		for (int i = 0; i < graph.size(); i++) {
+//			topologicalOrder.add(ord[i]);
+//		}
+//		assertEquals("[0, 5, 2, 6, 1, 4, 3]", topologicalOrder.toString());
 		
-		for (int i = 0; i < graph.size(); i++) {
-			topologicalOrder.add(ord[i]);
-		}
-		assertEquals("[0, 5, 2, 6, 1, 4, 3]", topologicalOrder.toString());
+		unsupportedOperation = assertThrows(UnsupportedOperationException.class, () -> graph.connectedComponents());
+		assertEquals("Error: this type of operation is not supported by this graph! \n", unsupportedOperation.getMessage());
 	}
 	
 	@Test
@@ -370,7 +368,7 @@ public class TestAdjMatrixDirWeight {
 		graph.addEdge(3, 4);
 		
 		unsupportedOperation = assertThrows(UnsupportedOperationException.class, () -> graph.connectedComponents());
-		assertEquals("Error: this type of operation is not supported by this graph. The graph must be Undirected! \n", unsupportedOperation.getMessage());
+		assertEquals("Error: this type of operation is not supported by this graph! \n", unsupportedOperation.getMessage());
 	}
 	
 	@Test
@@ -379,6 +377,7 @@ public class TestAdjMatrixDirWeight {
 		/* Initialize graph for testing */
 		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(10);
 		
+		/* Add Edges */
 		graph.addEdge(0, 4);
 		graph.addEdge(0, 5);
 		graph.addEdge(1, 0);
@@ -397,8 +396,165 @@ public class TestAdjMatrixDirWeight {
 		graph.addEdge(8, 9);
 		graph.addEdge(9, 8);
 		
-		/* Verify Strongly Connected Components */
-		Set<Set<Integer>> stronglyConnectedSetComponets = graph.stronglyConnectedComponents();
-		assertEquals("[[8, 9], [7], [0, 1, 4, 5], [2, 3, 6]]", stronglyConnectedSetComponets.toString());
+//		/* Verify Strongly Connected Components */
+//		Set<Set<Integer>> stronglyConnectedSetComponets = graph.stronglyConnectedComponents();
+//		assertEquals("[[8, 9], [7], [0, 1, 4, 5], [2, 3, 6]]", stronglyConnectedSetComponets.toString());
+
+		unsupportedOperation = assertThrows(UnsupportedOperationException.class, () -> graph.stronglyConnectedComponents());
+		assertEquals("Error: this type of operation is not supported by this graph! \n", unsupportedOperation.getMessage());
+	}
+	
+	@Test
+	public void testWeight() {
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(5);
+		
+		/* Add Edges */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(2, 4);
+		graph.addEdge(3, 4);
+		
+		/* Verify that standard weight is 1.0 */
+		assertEquals(1.0, graph.getEdgeWeight(0, 1), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(0, 2), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(1, 2), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(2, 3), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(2, 4), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(3, 4), 0.00);
+		
+		/* Assign weights to edges */
+		graph.setEdgeWeight(0, 1, 2.0);
+		graph.setEdgeWeight(0, 2, 7.0);
+		graph.setEdgeWeight(1, 2, 4.0);
+		graph.setEdgeWeight(2, 3, 1.0);
+		graph.setEdgeWeight(2, 4, 4.0);
+		graph.setEdgeWeight(3, 4, 2.0);
+		
+		/* Verify edges weight */
+		assertEquals(2.0, graph.getEdgeWeight(0, 1), 0.00);
+		assertEquals(7.0, graph.getEdgeWeight(0, 2), 0.00);
+		assertEquals(4.0, graph.getEdgeWeight(1, 2), 0.00);
+		assertEquals(1.0, graph.getEdgeWeight(2, 3), 0.00);
+		assertEquals(4.0, graph.getEdgeWeight(2, 4), 0.00);
+		assertEquals(2.0, graph.getEdgeWeight(3, 4), 0.00);
+	}
+	
+	@Test
+	public void testFloydWarshall() {
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight graph = new AdjMatrixDirWeight(4);
+		
+		/* Add Edges */
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 3);
+		graph.addEdge(1, 2);
+		graph.addEdge(3, 1);
+		graph.addEdge(3, 2);
+		
+		/* Set Weight of the Edges */
+		graph.setEdgeWeight(0, 1, 4.0);
+		graph.setEdgeWeight(0, 3, -5.0);
+		graph.setEdgeWeight(1, 2, -1.0);
+		graph.setEdgeWeight(3, 1, 0.0);
+		graph.setEdgeWeight(3, 2, 2.0);
+		
+		/* Initialize WeightedGraph for testing */
+		WeightedGraph floydWarshall_01 = graph.getFloydWarshallShortestPaths();
+		
+		System.out.print("\n FIRST GRAPH - Before Floyd-Warshall \n");
+		
+		/* Print the adjacency matrix of the graph */
+		showAsMatrix((AdjMatrixDirWeight) graph);
+		
+		System.out.print("\n FIRST GRAPH -  After Floyd-Warshall \n");
+		
+		/* Print the matrix managed by Floyd-Warshall algorithm */
+		showAsMatrix((AdjMatrixDirWeight) floydWarshall_01);
+		
+		/* Initialize other graph for testing negative cycle */
+		AdjMatrixDirWeight otherGraph = new AdjMatrixDirWeight(8);
+		
+		/* Add Edges */
+		otherGraph.addEdge(0, 1);
+		otherGraph.addEdge(0, 2);
+		otherGraph.addEdge(2, 4);
+		otherGraph.addEdge(2, 5);
+		otherGraph.addEdge(3, 0);
+		otherGraph.addEdge(3, 2);
+		otherGraph.addEdge(4, 3);
+		otherGraph.addEdge(4, 6);
+		otherGraph.addEdge(5, 1);
+		otherGraph.addEdge(5, 4);
+		otherGraph.addEdge(6, 5);
+		otherGraph.addEdge(6, 7);
+		otherGraph.addEdge(7, 4);
+		
+		/* Set Weight of the Edges */
+		otherGraph.setEdgeWeight(0, 1, 4.0);
+		otherGraph.setEdgeWeight(0, 2, 4.0);
+		otherGraph.setEdgeWeight(2, 4, 4.0);
+		otherGraph.setEdgeWeight(2, 5, -2.0);
+		otherGraph.setEdgeWeight(3, 0, 3.0);
+		otherGraph.setEdgeWeight(3, 2, 2.0);
+		otherGraph.setEdgeWeight(4, 3, 1.0);
+		otherGraph.setEdgeWeight(4, 6, -2.0);
+		otherGraph.setEdgeWeight(5, 1, 3.0);
+		otherGraph.setEdgeWeight(5, 4, -3.0);
+		otherGraph.setEdgeWeight(6, 5, 2.0);
+		otherGraph.setEdgeWeight(6, 7, 2.0);
+		otherGraph.setEdgeWeight(7, 4, -2.0);
+		
+		System.out.print("\n SECOND GRAPH - Before Floyd-Warshall \n");
+		
+		showAsMatrix(otherGraph);
+		
+		assertThrows(UnsupportedOperationException.class, () -> otherGraph.getFloydWarshallShortestPaths());
+	}
+	/* print graph as a matrix */
+	private static String showAsMatrix(AdjMatrixDirWeight graph) {
+		
+		String str = " ------";
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		str += " | X |";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "  " + graph.vertices[i] + " ";
+		}
+		str += " ";
+		str += "|\n";
+		str += " ------";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		
+		for (int i = 0; i < graph.adjMatrix.length; i++) {
+			str += " | " + graph.vertices[i] + " | ";
+			for (int j = 0; j < graph.adjMatrix[i].length; j++) {
+				if ((graph.adjMatrix[i][j] == Double.POSITIVE_INFINITY) && (i != j)) {
+					str += "INF ";
+				}
+				else str += graph.adjMatrix[i][j] + " ";
+			}
+			str += "|\n";
+		}
+		str += " ------";
+		
+		for (int i = 0; i < graph.size(); i++) {
+			str += "----";
+		}
+		str += "-\n";
+		
+		System.out.print(str);
+		return str;
 	}
 }

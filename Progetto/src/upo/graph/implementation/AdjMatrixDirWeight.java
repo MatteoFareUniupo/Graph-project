@@ -23,6 +23,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	public int [] vertices;
 	public double [][] adjMatrix;
 	public static int time; /* visit time counter */
+	public static final double INFINITY = Double.POSITIVE_INFINITY;
 	
 	public AdjMatrixDirWeight(int dim) {
 		// TODO Auto-generated constructor stub
@@ -30,7 +31,15 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		for (int i = 0; i < dim; i++) {
 			vertices[i] = i;
 		}
-		adjMatrix = new double[dim][dim];	
+		adjMatrix = new double[dim][dim];
+		
+		for (int i = 0; i < adjMatrix.length; i++) {
+			for (int j = 0; j < adjMatrix.length; j++) {
+				if (i != j) {
+					adjMatrix[i][j] = INFINITY;
+				}
+			}
+		}
 	}
 	
 	public int findIndex(int vertex) {
@@ -53,6 +62,8 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		for (int i = 0; i < size(); i++) {
 			for (int j = 0; j < size(); j++) {
 				newMatrix[i][j] = adjMatrix[i][j];
+				newMatrix[i][size()] = INFINITY;
+				newMatrix[size()][j] = INFINITY;
 			}
 		}
 		
@@ -120,6 +131,13 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 				newMatrix[i][j] = adjMatrix[i][j+1];
 			}
 		}
+		
+		for (int i = indexOfVertex; i < size()-1; i++) {
+			for (int j = 0; j < indexOfVertex; j++) {
+				newMatrix[i][j] = adjMatrix[i+1][j];
+			}
+		}
+		
 		/* Restore the index/value number progression */
 		for (int i = indexOfVertex; i < size()-1; i++) { 
 			newVertices[i] = vertices[i];
@@ -144,21 +162,12 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
 		
-		if (adjMatrix[indexOfSource][indexOfTarget] == 0) {
+		if (adjMatrix[indexOfSource][indexOfTarget] == INFINITY) {
 			adjMatrix[indexOfSource][indexOfTarget] = defaultEdgeWeight;
 		}
-		else if (adjMatrix[indexOfTarget][indexOfSource] == 0) {
+		else if (adjMatrix[indexOfTarget][indexOfSource] == INFINITY) {
 			adjMatrix[indexOfTarget][indexOfSource] = defaultEdgeWeight;
 		}
-//		else { // is already in the graph
-//			
-//			if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
-//				System.out.print("\n The edge ["+indexOfSource+"]-["+indexOfTarget+"] is already in the graph. \n");
-//			}
-//			if (adjMatrix[indexOfTarget][indexOfSource] != 0) {
-//				System.out.print("\n The edge ["+indexOfTarget+"]-["+indexOfSource+"] is already in the graph. \n");
-//			}
-//		}
 	}
 
 	@Override
@@ -177,7 +186,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
 		
-		if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
+		if (adjMatrix[indexOfSource][indexOfTarget] != INFINITY && indexOfSource != indexOfTarget) {
 			return true;
 		}
 		else 
@@ -204,10 +213,9 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		int indexOfSource = findIndex(sourceVertexIndex);
 		int indexOfTarget = findIndex(targetVertexIndex);
 		
-		if (adjMatrix[indexOfSource][indexOfTarget] != 0) {
+		if (adjMatrix[indexOfSource][indexOfTarget] != INFINITY) {
 			
-			adjMatrix[indexOfSource][indexOfTarget] = 0;
-			System.out.print(" The edge ["+indexOfSource+"-"+indexOfTarget+"] is removed. \n");
+			adjMatrix[indexOfSource][indexOfTarget] = INFINITY;
 		}
 	}
 
@@ -221,7 +229,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		int indexOfVertex = findIndex(vertexIndex);
 		
 		for (int i = 0; i < size(); i++) {
-			if (adjMatrix[indexOfVertex][i] != 0) {
+			if (containsEdge(indexOfVertex, i)) { // adjMatrix[indexOfVertex][i] != INFINITY && adjMatrix[indexOfVertex][i] != 0.0
 				adj.add(vertices[i]);
 			}
 		}
@@ -284,7 +292,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		visitForest.setColor(vertices[indexOfVertex], Color.GRAY);
 		
 		for (int i = 0; i < size(); i++) {
-			if (adjMatrix[indexOfVertex][i] != 0) {
+			if (containsEdge(indexOfVertex, i)) {
 				visitForest.setParent(vertices[i], indexOfVertex);
 				if (visitForest.getColor(vertices[i]) == Color.WHITE) {
 					if (checkCycle(i, visitForest)) {
@@ -329,6 +337,12 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public VisitForest getBFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
+		if (!containsVertex(startingVertex)) {
+			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
+		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: bfs algorith is not apllicable on this graph! \n"); 
+		}
 		VisitForest visit = new VisitForest(this, VisitType.BFS);
 		Queue<Integer> queue = new LinkedList<Integer>();
 		
@@ -339,13 +353,13 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 
 		visit.setColor(startingVertex, Color.GRAY);	
 		visit.setDistance(startingVertex, 0.0);
-		
 		queue.add(startingVertex);
 		
+//		System.out.print("bfs("+startingVertex+"): ");
 		while (queue.size() != 0)
 		{	
-			int head = queue.peek(); /* Equal to: "int head = queue.poll();" -> with this method "queue.remove()" must be removed. */
-			System.out.print(head+" ⟶ "); // DA TOGLIERE 
+			int head = queue.peek(); 
+			//System.out.print(head+" ⟶ ");
 			
 			for (int i : getAdjacent(head)) { 
 				if (visit.getColor(i) == Color.WHITE) { 
@@ -358,7 +372,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			visit.setColor(head, Color.BLACK);
 			queue.remove();
 		}
-		System.out.print("end."); // DA TOGLIERE
+		//System.out.print("end. \n\n");
 		return visit;
 	}
 	
@@ -367,13 +381,13 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	 * @param sourceVertex
 	 * @param visit
 	 */
-	private void dfsUtil(int sourceVertex, VisitForest visit) {
+	private VisitForest dfsUtil(int sourceVertex, VisitForest visit) { 
 		// TODO Auto-generated method stub
 		visit.setColor(sourceVertex, Color.GRAY);
 		visit.setStartTime(sourceVertex, time);
 		time++;
 		
-		System.out.print(sourceVertex+" ⟶ ");// DA TOGLIERE
+		System.out.print(sourceVertex+" ⟶ ");
 		
 		for (int vertex : getAdjacent(sourceVertex)) {
 			if (visit.getColor(vertex) == Color.WHITE) {
@@ -384,14 +398,22 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		visit.setColor(sourceVertex, Color.BLACK);
 		visit.setEndTime(sourceVertex, time);
 		time++;
+		
+		return visit;
 	}	
 	
 	@Override
 	public VisitForest getDFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
+		if (!containsVertex(startingVertex)) {
+			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
+		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
 		VisitForest visit = new VisitForest(this, VisitType.DFS);
 		
-		System.out.print("dfs("+startingVertex+"): ");
+		//System.out.print("dfs("+startingVertex+"): ");
 		
 		for (int i : vertices) {
 			visit.setColor(i, Color.WHITE);
@@ -400,28 +422,11 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		}
 		time = 0;
 		
-		dfsUtil(startingVertex, visit);
+		visit = dfsUtil(startingVertex, visit); 
 		
-		System.out.print("end. \n\n"); 
+		//System.out.print("end. \n\n"); 
 		
 		return visit;	
-	}
-	
-	/**
-	 * Utility function for TOT-DFS algorithm.
-	 * @param sourceVertex
-	 * @param visit
-	 */
-	private void DFSTotUtil(int sourceVertex, VisitForest visit) {
-		// TODO Auto-generated method stub
-		visit.setColor(sourceVertex, Color.GRAY);
-		System.out.print(sourceVertex+" ⟶ ");// DA TOGLIERE
-		
-		for (int i = 0; i < size(); i++) {
-			if (visit.getColor(i) == Color.WHITE) {
-				DFSTotUtil(i, visit);
-			}
-		}
 	}
 
 	@Override
@@ -431,34 +436,60 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		if (!containsVertex(startingVertex)) {
 			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
 		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
 		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
-		for (int i = startingVertex; i < size(); i++) {
+		//System.out.print("dfs("+startingVertex+"): ");
+		/* Initialize graph's visit */
+		for (int i : vertices) {
+			visit.setColor(i, Color.WHITE);
+			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY);
+			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY);
+		}
+		time = 0;
+		
+		dfsUtil(startingVertex, visit);
+
+		for (int i : vertices) {
 			if (visit.getColor(i) == Color.WHITE) {
-				DFSTotUtil(i, visit);
+				visit = dfsUtil(i, visit);
 			}
 		}
+		
+//		System.out.print("end. \n\n"); 
+		
 		return visit;
 	}
 	
-	@Override /* MAYBE IS WRONG, I DON'T KNOW */
+	@Override 
 	public VisitForest getDFSTOTForest(int[] vertexOrdering)
 			throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		for (int i = 0; i < size(); i++) {
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
+		for (int i : vertexOrdering) {
 			if (!containsVertex(vertexOrdering[i])) {
 				throw new IllegalArgumentException("Error: vertex ("+vertexOrdering[i]+") does not exist! \n");
 			}
-		}
-		
+		}	
 		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
-		for (int i = 0; i < vertexOrdering.length; i++) {
-			for (int j = vertexOrdering[i]; j < vertexOrdering.length; j++) {
-				if (visit.getColor(j) == Color.WHITE) {
-					DFSTotUtil(j, visit);
-				}
+		for (int i : vertices) {
+			visit.setColor(i, Color.WHITE); /* Initialize vertices to WHITE */
+			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+		}
+		time = 0; /* Initialize counter to zero */
+		
+		for (int i : vertexOrdering) {
+			System.out.print(" • ");
+			if (visit.getColor(i) == Color.WHITE) {
+				getDFSTOTForest(i);
 			}
+			System.out.println("end. ");
 		}
 		return visit;
 	}
@@ -469,15 +500,15 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	 * @param visit
 	 * @param stack
 	 */
-	private void topologicalSortUtil(int v, VisitForest visit, Stack<Integer> stack) { // topologicalSortUtil(int v, boolean[] visited, Stack<Integer> stack)
+	private void topologicalSortUtil(int v, VisitForest visit, Stack<Integer> stack) { 
 		// TODO Auto-generated method stub
-		visit.setColor(v, Color.GRAY); // visited[v] = true;
+		visit.setColor(v, Color.GRAY); 
  		int i;
 		
 		Iterator<Integer> it = getAdjacent(v).iterator();
 		while(it.hasNext()) {
 			i = it.next();
-			if (visit.getColor(i) == Color.WHITE) { // !visited[i]
+			if (visit.getColor(i) == Color.WHITE) { 
 				topologicalSortUtil(i, visit, stack);
 			}
 		}
@@ -487,7 +518,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public int[] topologicalSort() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		if (isDAG()) {
+		if (isDAG() && !WeightedGraph.class.isAssignableFrom(getClass())) {
 			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 			Stack<Integer> stack = new Stack<>();
 			
@@ -512,12 +543,12 @@ public class AdjMatrixDirWeight implements WeightedGraph {
  			}
 			return ord;
 		}
-		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. "); 
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph! "); 
 	}
 	
 	public Set<Set<Integer>> stronglyConnectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		if (isDirected()) {
+		if (isDirected() && !WeightedGraph.class.isAssignableFrom(getClass())) {
 			
 			Set<Set<Integer>> setOfSCC = new HashSet<>();
 			
@@ -554,7 +585,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			}
 			return setOfSCC;
 		}
-		else throw new UnsupportedOperationException("\n Error: this operation is not allowed on this graph. ");
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph! \n");
 	}
 	
 	/**
@@ -626,7 +657,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 	@Override
 	public Set<Set<Integer>> connectedComponents() throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
-		if (isDirected() == false) {
+		if ((!isDirected()) && !WeightedGraph.class.isAssignableFrom(getClass())) {
 			
 			VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 			
@@ -660,7 +691,7 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			}
 			return setOfCC;
 		}
-		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph. The graph must be Undirected! \n");
+		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph! \n");
 	}
 
 	@Override
@@ -714,4 +745,46 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 			}
 		}
 	}
+	
+	@Override
+	public WeightedGraph getFloydWarshallShortestPaths() throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		AdjMatrixDirWeight tmpGraph = new AdjMatrixDirWeight(size());
+		WeightedGraph weightedGraph = tmpGraph;
+		
+		double [][] distance = tmpGraph.adjMatrix;
+		double [][] predecessor = new double [size()][size()];
+				
+		for (int i = 0; i < size(); i++) {
+			for (int j = 0; j < size(); j++) {
+				predecessor[i][j] = -1;
+				if (i == j) {
+					distance[i][j] = 0.0;
+				}
+				else if (containsEdge(i, j)){
+					distance[i][j] = getEdgeWeight(i, j);
+					predecessor[i][j] = i;
+				}
+				else if (adjMatrix[i][j] == INFINITY) {
+					distance[i][j] = INFINITY;
+				}
+			}
+		}
+		
+		for (int k = 0; k < size(); k++) {
+			for (int i = 0; i < size(); i++) {
+				for (int j = 0; j < size(); j++) {
+					if (distance[i][j] > distance[i][k] + distance[k][j]) {
+						distance[i][j] = distance[i][k] + distance[k][j];
+						predecessor[i][j] = predecessor[k][j];
+					}
+					if ((i == j) && (distance[i][j] < 0)) {
+						throw new UnsupportedOperationException("Error: the Graph has a Negative Cycle! \n");
+					}
+				}
+			}
+		}
+		return weightedGraph;
+	}	
+	
 }

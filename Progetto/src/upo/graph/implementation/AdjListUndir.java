@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -107,9 +108,6 @@ public class AdjListUndir implements Graph{
 				adjList.get(source).add(target);
 				adjList.get(target).add(source);
 			}
-//			else {
-//				System.out.println("Error: edge [" + source + "]-[" + target + "] is already present in the graph! \n");
-//			}
 		}		
 	}
 
@@ -157,7 +155,6 @@ public class AdjListUndir implements Graph{
 			for (int i = 0; i < adjList.get(sourceVertexIndex).size(); i++) {
 				if (targetVertexIndex == adjList.get(sourceVertexIndex).get(i)) {
 					adjList.get(sourceVertexIndex).remove(i);
-//					System.out.print(" The edge ["+sourceVertexIndex+"-"+targetVertexIndex+"] || ["+targetVertexIndex+"-"+sourceVertexIndex+"] is removed. \n");
 				}
 			}
 			for (int j = 0; j < adjList.get(targetVertexIndex).size(); j++) {
@@ -271,14 +268,13 @@ public class AdjListUndir implements Graph{
 	@Override
 	public VisitForest getBFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		VisitForest visita = new VisitForest(this, VisitType.BFS);
-		
-		if (visita.visitType != VisitType.BFS) {
-			throw new UnsupportedOperationException("Error: this operation is not supported! \n");
-		}
 		if (!this.containsVertex(startingVertex)) {
 			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
 		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
+		VisitForest visita = new VisitForest(this, VisitType.BFS);
 		queue = new LinkedList<Integer>();
 		
 		visita.setColor(startingVertex, Color.GRAY);
@@ -288,7 +284,7 @@ public class AdjListUndir implements Graph{
 		
 		while (!queue.isEmpty()) {
 			startingVertex = queue.peek();
-			//System.out.print(startingVertex+" ⟶ "); //
+			System.out.print(startingVertex+" ⟶ ");
 			
 			Iterator<Integer> iterator = getAdjacent(startingVertex).iterator();
 			while (iterator.hasNext()) {
@@ -316,7 +312,7 @@ public class AdjListUndir implements Graph{
 	 * @param sourceVertex
 	 * @param visit
 	 */
-	private void dfsUtil(int sourceVertex, VisitForest visit) {
+	private VisitForest dfsUtil(int sourceVertex, VisitForest visit) { 
 		// TODO Auto-generated method stub
 		visit.setColor(sourceVertex, Color.GRAY);
 		visit.setStartTime(sourceVertex, time);
@@ -333,57 +329,34 @@ public class AdjListUndir implements Graph{
 		visit.setColor(sourceVertex, Color.BLACK);
 		visit.setEndTime(sourceVertex, time);
 		time++;
+		
+		return visit;
 	}
 
 	@Override
 	public VisitForest getDFSTree(int startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		
 		if (!this.containsVertex(startingVertex)) {
 			throw new IllegalArgumentException("Error: vertex ("+startingVertex+") does not exist! \n");
 		}
-		
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
 		VisitForest visit = new VisitForest(this, VisitType.DFS);
 		
-		System.out.print("dfs("+startingVertex+"): ");
+		//System.out.print("dfs("+startingVertex+"): ");
 		
 		for (int i : vertice) {
 			visit.setColor(i, Color.WHITE); /* Initialize vertices to WHITE */
 			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
 			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
 		}
-		
 		time = 0; /* Initialize counter to zero */
 		
-		dfsUtil(startingVertex, visit); 
+		visit = dfsUtil(startingVertex, visit); 
 		
-		System.out.print("ens. \n");
+		//System.out.print("end. \n");
 		return visit;
-	}
-
-	/**
-	 * Utility function for DFS algorithm.
-	 * @param sourceVertex
-	 * @param visit
-	 */
-	private void dfsTOTUtil(int sourceVertex, VisitForest visit) {
-		// TODO Auto-generated method stub
-		int time = AdjMatrixDirWeight.time;
-		
-		visit.setColor(sourceVertex, Color.GRAY);
-		visit.setStartTime(sourceVertex, time);
-		time +=1;
-		System.out.print(sourceVertex+" ⟶ ");
-		
-		for (int i = 0; i < size(); i++) {
-			if (visit.getColor(i) == Color.WHITE) {
-				visit.setParent(i, sourceVertex);
-				dfsTOTUtil(i, visit);
-			}
-		}	
-		visit.setColor(sourceVertex, Color.BLACK);
-		visit.setEndTime(sourceVertex, time);
-		time +=1;
 	}
 
 	@Override
@@ -393,14 +366,28 @@ public class AdjListUndir implements Graph{
 		if (!containsVertex(startingVertex)) {
 			throw new IllegalArgumentException("\n The vertex ("+startingVertex+") does not exist! \n");
 		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
 		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
 		
-		for (int i = startingVertex; i < size(); i++) {
-			
+		for (int i : vertice) {
+			visit.setColor(i, Color.WHITE); /* Initialize vertices to WHITE */
+			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+		}
+		time = 0; /* Initialize counter to zero */
+		
+		//System.out.print("dfs-tot("+startingVertex+"): ");
+		
+		dfsUtil(startingVertex, visit);
+
+		for (int i : vertice) {
 			if (visit.getColor(i) == Color.WHITE) {
-				dfsTOTUtil(i, visit);
+				visit = dfsUtil(i, visit);
 			}
 		}
+		//System.out.print("\n");
 		return visit;
 	}
 
@@ -408,8 +395,34 @@ public class AdjListUndir implements Graph{
 	public VisitForest getDFSTOTForest(int[] vertexOrdering)
 			throws UnsupportedOperationException, IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		for (int i : vertice) {
+			if (!containsVertex(vertexOrdering[i])) {
+				throw new IllegalArgumentException("\n The vertex ("+vertexOrdering[i]+") does not exist! \n");
+			}
+		}
+		if (WeightedGraph.class.isAssignableFrom(getClass())) {
+			throw new UnsupportedOperationException("Error: dfs algorith is not apllicable on this graph! \n"); 
+		}
+		VisitForest visit = new VisitForest(this, VisitType.DFS_TOT);
+		
+		for (int i : vertice) {
+			visit.setColor(i, Color.WHITE); /* Initialize vertices to WHITE */
+			visit.setStartTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+			visit.setEndTime(i, (int)Double.POSITIVE_INFINITY); /* Initialize vertices to infinite */
+		}
+		time = 0; /* Initialize counter to zero */
+		
+		for (int i : vertexOrdering) {
+			System.out.print(" • ");
+			if (visit.getColor(i) == Color.WHITE) {
+				getDFSTOTForest(i);
+			}
+			System.out.println("end. ");
+		}
+		return visit;
 	}
+		
+
 	
 	/**
 	 * Support method to find topological sort.

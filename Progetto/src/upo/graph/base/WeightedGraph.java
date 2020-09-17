@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 /**
  * Interfaccia che modella i metodi pubblici di un oggetto di tipo Grafo Pesato.
  * Questa interfaccia non deve essere modificata. Se trovate errori contattate il docente.
- * Questa interfaccia sar‡ integrata con altri metodi per le prossime consegne.
+ * Questa interfaccia sar√† integrata con altri metodi per le prossime consegne.
  * 
  * @author Luca Piovesan
  *
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public interface WeightedGraph extends Graph {
 	
 	/**
-	 * Rappresenta il peso di default di un arco, appena Ë stato inserito.
+	 * Rappresenta il peso di default di un arco, appena √® stato inserito.
 	 */
 	public static final double defaultEdgeWeight = 1.0; 
 	
@@ -38,5 +38,16 @@ public interface WeightedGraph extends Graph {
 	 * @throws NoSuchElementException se l'arco non appartiene al grafo.
 	 */
 	public void setEdgeWeight(int sourceVertexIndex, int targetVertexIndex, double weight) throws IllegalArgumentException, NoSuchElementException;
-
+	
+	/** 
+	 * Calcola i cammini minimi tra tutte le coppie di vertici utilizzando l'algoritmo 
+	 * di Floyd-Warshall. 
+	 * </br>CONSIGLIO: non usate la matrice di adiacenza per eseguire l'algoritmo, ma fatene una copia. Altrimenti
+	 * "distruggereste" il grafo.
+	 * 
+	 * @return un <code>WeightedGraph</code> che rappresenta i cammini minimi.
+	 * @throws UnsupportedOperationException se <code>this</code> non permette di trovare i cammini minimi 
+	 * con questo algoritmo o se l'implementazione non √® richiesta dal compito.
+	 */
+	public WeightedGraph getFloydWarshallShortestPaths() throws UnsupportedOperationException;
 }
