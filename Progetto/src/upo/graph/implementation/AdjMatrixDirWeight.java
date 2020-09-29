@@ -787,4 +787,17 @@ public class AdjMatrixDirWeight implements WeightedGraph {
 		return weightedGraph;
 	}	
 	
+	public boolean equals(Object o) {
+		// TODO Auto-generated method stub
+		
+		boolean verify = false;
+		Set<Integer> adjSet = new HashSet<>();
+		for (int i = 0; i < adjMatrix.length; i++) {
+			adjSet.addAll(getAdjacent(i));	
+		}
+		if (adjSet.contains(o)) {
+			verify = true;
+		}
+		return verify;
+	}
 }

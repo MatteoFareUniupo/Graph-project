@@ -3,6 +3,7 @@ package upo.graph.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import org.junit.Test;
@@ -592,5 +593,61 @@ public class TestAdjListUndir {
 		
 		unsupportedOperation = assertThrows(UnsupportedOperationException.class, () -> graph.stronglyConnectedComponents());
 		assertEquals("\n Error: this operation is not allowed on this graph - It must be Direct!!! \n", unsupportedOperation.getMessage());
+	}
+	
+	@Test
+	public void testEquality() {
+		
+		/* Initialize graph for testing */
+		AdjListUndir firstGraph = new AdjListUndir(4);
+		
+		ArrayList<Integer> firstArrayList = new ArrayList<>();
+		ArrayList<Integer> secondArrayList = new ArrayList<>();
+		
+		/* Add Edges to the graph */
+		firstGraph.addEdge(0, 1);
+		firstGraph.addEdge(0, 2);
+		firstGraph.addEdge(0, 3);
+		firstGraph.addEdge(1, 2);
+		firstGraph.addEdge(2, 3);
+		
+		/* Initialize graph for testing */
+		AdjListUndir secondGraph = new AdjListUndir(4);
+		
+		/* Add Edges to the graph */
+		secondGraph.addEdge(0, 1);
+		secondGraph.addEdge(0, 2);
+		secondGraph.addEdge(0, 3);
+		secondGraph.addEdge(1, 2);
+		secondGraph.addEdge(2, 3);
+		
+		for (int i : firstGraph.vertice) {
+			firstArrayList = firstGraph.adjList.get(i);
+		}
+		
+		for (int i : secondGraph.vertice) {
+			secondArrayList = secondGraph.adjList.get(i);
+		}
+		
+		/* Verify that firstGraph is equal to secondGraph and vice versa */
+		assertEquals(true, firstArrayList.equals(secondArrayList));
+		assertEquals(true, secondArrayList.equals(firstArrayList));
+		
+		/* Initialize graph for testing */
+		AdjListUndir thirdGraph = new AdjListUndir(6);
+		
+		ArrayList<Integer> thirdArrayList = new ArrayList<>();
+		
+		/* Add Edges to the graph */
+		thirdGraph.addEdge(0, 1);
+		thirdGraph.addEdge(0, 2);
+		thirdGraph.addEdge(1, 3);
+		thirdGraph.addEdge(2, 5);
+		thirdGraph.addEdge(4, 3);
+		
+		/* Verify that thirdGraph is NOT equal to secondGraph or firstGraph */
+		assertEquals(false, firstArrayList.equals(thirdArrayList));
+		assertEquals(false, thirdArrayList.equals(secondArrayList));
+		
 	}
 }

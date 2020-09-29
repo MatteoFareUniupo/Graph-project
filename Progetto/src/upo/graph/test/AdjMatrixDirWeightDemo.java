@@ -338,8 +338,6 @@ public class AdjMatrixDirWeightDemo {
 		
 		printVertices(graph);
 		
-		System.out.println(); // next-line
-		
 		addEdge(graph, 0, 1);
 		addEdge(graph, 0, 2);
 		addEdge(graph, 2, 4);
@@ -373,10 +371,11 @@ public class AdjMatrixDirWeightDemo {
 		System.out.println(); // next-line
 		System.out.println(); // next-line
 		
+		System.out.print(" Adjacency Matrix: \n");
 		showAsMatrix(graph);
 		
 		// Negative Cycle
-		showAsMatrix((AdjMatrixDirWeight)floydWarshall(graph));
+		//showAsMatrix((AdjMatrixDirWeight)floydWarshall(graph));
 		
 		System.out.println(); // next-line
 		System.out.println(); // next-line

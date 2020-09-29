@@ -286,8 +286,6 @@ public class AdjListUndirDemo {
 		int [] order = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8};
 		
 		printVertices(graph);
-		
-		System.out.println(); // next-line
 
 		addEdge(graph, 0, 1);
 		addEdge(graph, 0, 4);

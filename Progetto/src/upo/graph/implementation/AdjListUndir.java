@@ -625,4 +625,17 @@ public class AdjListUndir implements Graph{
 		}
 		else throw new UnsupportedOperationException("Error: this type of operation is not supported by this graph - It must be undirect!!! \n");
 	}
+	
+	public boolean equals(Object o) {
+		// TODO Auto-generated method stub
+		boolean verify = false;
+		
+		for (int i : this.vertice) {
+			ArrayList<Integer> listOfAdj = adjList.get(i);
+			if (listOfAdj.equals(o)) {
+				verify = true;
+			}
+		}
+		return verify;	
+	}
 }

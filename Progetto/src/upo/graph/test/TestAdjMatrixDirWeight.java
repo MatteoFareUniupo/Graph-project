@@ -3,6 +3,7 @@ package upo.graph.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -556,5 +557,65 @@ public class TestAdjMatrixDirWeight {
 		
 		System.out.print(str);
 		return str;
+	}
+	
+	@Test
+	public void testEquals() {
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight firstGraph = new AdjMatrixDirWeight(4);
+		
+		Set<Integer> firstSet = new HashSet<>();
+		
+		/* Add Edges to the graph */
+		firstGraph.addEdge(0, 1);
+		firstGraph.addEdge(0, 2);
+		firstGraph.addEdge(0, 3);
+		firstGraph.addEdge(1, 2);
+		firstGraph.addEdge(2, 3);
+		
+		for (int i = 0; i < firstGraph.size(); i++) {
+			firstSet.addAll(firstGraph.getAdjacent(i));
+		}
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight secondGraph = new AdjMatrixDirWeight(4);
+		
+		Set<Integer> secondSet = new HashSet<>();
+		
+		/* Add Edges to the graph */
+		secondGraph.addEdge(0, 1);
+		secondGraph.addEdge(0, 2);
+		secondGraph.addEdge(0, 3);
+		secondGraph.addEdge(1, 2);
+		secondGraph.addEdge(2, 3);
+		
+		for (int i = 0; i < secondGraph.size(); i++) {
+			secondSet.addAll(secondGraph.getAdjacent(i));
+		}
+		
+		/* Verify that firstGraph is equal to secondGraph and vice versa */
+		assertEquals(true, firstSet.equals(secondSet));
+		assertEquals(true, secondSet.equals(firstSet));
+		
+		/* Initialize graph for testing */
+		AdjMatrixDirWeight thirdGraph = new AdjMatrixDirWeight(7);
+		
+		Set<Integer> thirdSet = new HashSet<>();
+		
+		/* Add Edges to the graph */
+		thirdGraph.addEdge(0, 1);
+		thirdGraph.addEdge(0, 2);
+		thirdGraph.addEdge(1, 3);
+		thirdGraph.addEdge(2, 5);
+		thirdGraph.addEdge(4, 3);
+		
+		for (int i = 0; i < thirdGraph.size(); i++) {
+			thirdSet.addAll(thirdGraph.getAdjacent(i));
+		}
+		
+		/* Verify that thirdGraph is NOT equal to secondGraph or firstGraph */
+		assertEquals(false, firstSet.equals(thirdSet));
+		assertEquals(false, thirdSet.equals(secondSet));
 	}
 }
