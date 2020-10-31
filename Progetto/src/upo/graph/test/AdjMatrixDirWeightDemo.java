@@ -239,6 +239,8 @@ public class AdjMatrixDirWeightDemo {
 		addEdge(graph, 2, 3);
 		addEdge(graph, 3, 4);
 		
+		System.out.println(); // next-line
+		
 		verifyEdge(graph, 0, 1);
 		verifyEdge(graph, 0, 2);
 		verifyEdge(graph, 1, 2);
@@ -255,8 +257,6 @@ public class AdjMatrixDirWeightDemo {
 
 		getSize(graph);
 		
-		System.out.println(); // next-line
-		
 		isAdjacent(graph, 0, 1);
 		isAdjacent(graph, 0, 2);
 		isAdjacent(graph, 1, 2);
@@ -267,10 +267,13 @@ public class AdjMatrixDirWeightDemo {
 		isAdjacent(graph, 0, 3);
 		
 		System.out.println(); // next-line
+		System.out.println(); // next-line
 		
 		showAsMatrix(graph);
 		
 		showAsAdjList(graph);
+		
+		System.out.println(); // next-line
 		
 		addEdge(graph, 4, 5);
 		
@@ -279,6 +282,8 @@ public class AdjMatrixDirWeightDemo {
 		showAsMatrix(graph);
 		
 		removeEdge(graph, 4, 5);
+		
+		System.out.println(); // next-line
 		
 		showAsMatrix(graph);
 		

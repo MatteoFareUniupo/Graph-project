@@ -314,6 +314,16 @@ public class AdjListUndirDemo {
 		
 		System.out.println(); // next-line
 		
+		System.out.print("\n "+ graph.adjList+ "\n");
+		
+		showAdjList(graph);
+		
+		System.out.println(); // next-line
+		
+		removeVertex(graph, 6);
+		
+		System.out.println(); // next-line
+		
 		showAdjList(graph);
 		
 		System.out.println(); // next-line

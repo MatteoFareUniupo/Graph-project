@@ -25,16 +25,20 @@ public class AdjListUndir implements Graph{
 	
 	public ArrayList<Integer> vertice = new ArrayList<Integer>();
 	public ArrayList<ArrayList<Integer>> adjList;
+	
 	public static int time; /* visit time counter */
 	
 	private int numOfVertices = size();
+	
 	private Queue<Integer> queue; /* queue used by BFS algorithm. */
 	
 	public AdjListUndir(int num) {
 		
 		adjList = new ArrayList<ArrayList<Integer>>();
 		vertice = new ArrayList<Integer>();
+		
 		this.numOfVertices = num;
+		
 		for (int i = 0; i < numOfVertices; i++) {
 			adjList.add(new ArrayList<Integer>());
 			vertice.add(i);
@@ -44,7 +48,9 @@ public class AdjListUndir implements Graph{
 	public int addVertex() {
 		// TODO Auto-generated method stub
 		int i = size();
+		
 		ArrayList<Integer> adjacentVertices = new ArrayList<Integer>();
+		
 		adjList.add(adjacentVertices);
 		vertice.add(i);
 		
@@ -78,6 +84,7 @@ public class AdjListUndir implements Graph{
 				}
 			}
 		}	
+		// remove vertex from adjList.
 		for (int i = 0; i < size(); i++) {
 			int posVertex = adjList.get(i).indexOf(index);
 			if (posVertex > -1) {

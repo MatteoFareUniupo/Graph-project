@@ -565,7 +565,7 @@ public class TestAdjListUndir {
 	}
 	
 	@Test
-	public void testConnectedComponets() {
+	public void testConnectedComponents() {
 		
 		/* Initialize graph for testing */
 		AdjListUndir graph = new AdjListUndir(10);
@@ -582,7 +582,6 @@ public class TestAdjListUndir {
 		String expected = "[[8, 9], [7], [0, 1, 4, 5], [2, 3, 6]]";
 		
 		assertEquals(expected, connectedComponets.toString());
-		
 	}
 	
 	@Test
